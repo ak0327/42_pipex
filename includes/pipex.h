@@ -48,19 +48,13 @@ struct s_pipe
 };
 
 /* inputs.c */
-void	get_env_paths(t_pipe *p, int fail_exit_no);
-void	get_cmds_from_argv(t_pipe *p, int fail_exit_no);
-void	get_file_names(t_pipe *p, int fail_exit_no);
+void	get_inputs(t_pipe *p, int fail_exit_no);
 
 /* fd.c */
-void	set_file_fds(t_pipe *p, int fail_exit_no);
-void	dup_fds(t_pipe *p, int fail_exit_no);
+void	set_fd(t_pipe *p, int fail_exit_no);
 
-/* child.c */
-void	make_pipe(t_pipe *p, int fail_exit_no);
-void	child_for_cmd1(t_pipe *p, int fail_exit_no);
-void	child_for_cmd2(t_pipe *p, int fail_exit_no);
-void	wait_pids(t_pipe *p, int fail_exit_no);
+/* pipe.c */
+void	exec_pipe(t_pipe *p, int fail_exit_no);
 
 /* utils.c */
 void	errmsg_and_exit(char *errmsg, int exit_no);

@@ -12,6 +12,7 @@
 
 #include "./../includes/pipex.h"
 
+/* functions */
 void	free_allocs(char **alloc_array, char *alloc_str)
 {
 	size_t	i;

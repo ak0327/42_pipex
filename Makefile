@@ -25,7 +25,7 @@ NAME		= pipex
 VPATH		= $(SRC_DIR)
 SRC_DIR		= ./srcs
 SRC			= main.c \
-			  child.c \
+			  pipe.c \
 			  inputs.c \
 			  fd.c \
 			  utils.c \

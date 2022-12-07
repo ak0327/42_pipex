@@ -12,7 +12,20 @@
 
 #include "./../includes/pipex.h"
 
-void	get_env_paths(t_pipe *p, int fail_exit_no)
+/* prototype declaration */
+static void	get_env_paths(t_pipe *p, int fail_exit_no);
+static void	get_cmds_from_argv(t_pipe *p, int fail_exit_no);
+static void	get_file_names(t_pipe *p, int fail_exit_no);
+
+/* functions */
+void	get_inputs(t_pipe *p, int fail_exit_no)
+{
+	get_env_paths(p, fail_exit_no);
+	get_cmds_from_argv(p, fail_exit_no);
+	get_file_names(p, fail_exit_no);
+}
+
+static void	get_env_paths(t_pipe *p, int fail_exit_no)
 {
 	size_t	i;
 
@@ -28,7 +41,7 @@ void	get_env_paths(t_pipe *p, int fail_exit_no)
 		errmsg_and_exit("[Error] Fail to get PATH in envp", fail_exit_no);
 }
 
-void	get_cmds_from_argv(t_pipe *p, int fail_exit_no)
+static void	get_cmds_from_argv(t_pipe *p, int fail_exit_no)
 {
 	p->input_cmd1 = ft_split(p->av[2], ' ');
 	p->input_cmd2 = ft_split(p->av[3], ' ');
@@ -36,7 +49,7 @@ void	get_cmds_from_argv(t_pipe *p, int fail_exit_no)
 		errmsg_and_exit("[Error] Fail to get cmd1 or cmd2", fail_exit_no);
 }
 
-void	get_file_names(t_pipe *p, int fail_exit_no)
+static void	get_file_names(t_pipe *p, int fail_exit_no)
 {
 	p->infile = ft_strtrim(p->av[1], SPACES);
 	p->outfile = ft_strtrim(p->av[4], SPACES);

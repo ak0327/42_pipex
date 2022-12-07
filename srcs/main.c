@@ -35,19 +35,9 @@ int	main(int argc, char **argv, char **envp)
 		"    it's same as operate:$> < infile cmd1 | cmd2 > outfile", \
 		EXIT_FAILURE);
 	init_p(&p, &argv, &envp);
-	// get_input
-	get_env_paths(&p, EXIT_FAILURE);
-	get_cmds_from_argv(&p, EXIT_FAILURE);
-	get_file_names(&p, EXIT_FAILURE);
-	// set fd
-	set_file_fds(&p, EXIT_FAILURE);
-	dup_fds(&p, EXIT_FAILURE);
-	// pipe
-	make_pipe(&p, EXIT_FAILURE);
-	child_for_cmd1(&p, EXIT_FAILURE);
-	child_for_cmd2(&p, EXIT_FAILURE);
-	close_and_frees(&p);
-	wait_pids(&p, EXIT_FAILURE);
+	get_input(&p, EXIT_FAILURE);
+	set_fd(&p, EXIT_FAILURE);
+	exec_pipe(&p, EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
