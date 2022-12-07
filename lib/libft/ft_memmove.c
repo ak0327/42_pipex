@@ -1,44 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printf_utils.c                                     :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/26 21:13:05 by takira            #+#    #+#             */
-/*   Updated: 2022/11/26 21:13:08 by takira           ###   ########.fr       */
+/*   Created: 2022/10/17 10:36:10 by takira            #+#    #+#             */
+/*   Updated: 2022/11/07 14:00:00 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_isdigit_pf(int c)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	return ('0' <= c && c <= '9');
-}
+	unsigned char		*dst_cpy;
+	const unsigned char	*src_cpy;
+	size_t				i;
+	size_t				j;
 
-char	*ft_strchr_printf(const char *s, int c)
-{
-	size_t	i;
-
+	dst_cpy = (unsigned char *) dst;
+	src_cpy = (const unsigned char *) src;
 	i = 0;
-	while (s[i] != '\0')
-	{
-		if (s[i] == (char)c)
-			return ((char *) &s[i]);
-		i++;
-	}
-	if ((char)c == '\0')
-		return ((char *) &s[i]);
-	return (NULL);
-}
-
-size_t	ft_strlen_printf(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
+	j = 0;
+	if (dst < src)
+		while (len--)
+			dst_cpy[i++] = src_cpy[j++];
+	else if (dst > src)
+		while (len--)
+			dst_cpy[len] = src_cpy[len];
+	return (dst);
 }

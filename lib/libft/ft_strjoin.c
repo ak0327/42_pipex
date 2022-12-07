@@ -1,40 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_substr.c                                        :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 10:40:01 by takira            #+#    #+#             */
+/*   Created: 2022/10/17 10:38:13 by takira            #+#    #+#             */
 /*   Updated: 2022/11/07 14:00:00 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static size_t	minsize(size_t a, size_t b)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	if (a <= b)
-		return (a);
-	return (b);
-}
+	size_t	s1_len;
+	size_t	s2_len;
+	char	*joined_str;
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	size_t	cpy_len;
-	size_t	start_idx;
-	char	*ret_str;
-
-	if (s == NULL)
+	if (s1 == NULL || s2 == NULL)
 		return (NULL);
-	start_idx = (size_t)start;
-	if (ft_strlen(s) < start_idx + 1)
-		cpy_len = 0;
-	else
-		cpy_len = minsize(ft_strlen(s) - start_idx, len);
-	ret_str = (char *)ft_calloc(sizeof(char), cpy_len + 1);
-	if (ret_str == NULL)
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
+	joined_str = (char *)ft_calloc(sizeof(char), s1_len + s2_len + 1);
+	if (joined_str == NULL)
 		return (NULL);
-	ft_memcpy(ret_str, &s[start_idx], cpy_len);
-	return (ret_str);
+	ft_memcpy(&joined_str[0], s1, s1_len);
+	ft_memcpy(&joined_str[s1_len], s2, s2_len);
+	return (joined_str);
 }

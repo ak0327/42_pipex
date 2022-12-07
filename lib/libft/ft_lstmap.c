@@ -1,44 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printf_utils.c                                     :+:      :+:    :+:   */
+/*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/26 21:13:05 by takira            #+#    #+#             */
-/*   Updated: 2022/11/26 21:13:08 by takira           ###   ########.fr       */
+/*   Created: 2022/10/17 10:35:07 by takira            #+#    #+#             */
+/*   Updated: 2022/11/13 18:32:51 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_isdigit_pf(int c)
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	return ('0' <= c && c <= '9');
-}
+	t_list	*ret_lst;
+	t_list	*new_node;
 
-char	*ft_strchr_printf(const char *s, int c)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i] != '\0')
+	if (lst == NULL || f == NULL)
+		return (NULL);
+	ret_lst = NULL;
+	while (lst != NULL)
 	{
-		if (s[i] == (char)c)
-			return ((char *) &s[i]);
-		i++;
+		new_node = ft_lstnew(f(lst->content));
+		if (new_node == NULL)
+		{
+			ft_lstclear(&ret_lst, del);
+			return (NULL);
+		}
+		ft_lstadd_back(&ret_lst, new_node);
+		lst = lst->next;
 	}
-	if ((char)c == '\0')
-		return ((char *) &s[i]);
-	return (NULL);
-}
-
-size_t	ft_strlen_printf(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
+	return (ret_lst);
 }

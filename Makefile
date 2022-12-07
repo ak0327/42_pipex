@@ -10,60 +10,109 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME		= pipex
-
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -MMD -MP
 
 ifdef WITH_TEST
-	CFLAGS		+= -g -fsanitize=address -fsanitize=undefined -D LESKS
+#	CFLAGS		+= -g -fsanitize=address -fsanitize=undefined -D LESKS
+	CFLAGS		+= -D LESKS
 endif
 
-LIBFT_DIR	= ./libft
-#LIBFT_NAME	= lib.a
-#LIBFT		= $(LIBFT_DIR)/$(LIBFT_NAME)
-#
-#INCLUDES	= -I $(LIBFT_DIR)
-#LIBS_DIR	= -L (LIBFT_DIR)
-#LIBS		= -lft
+
+# MANDATORY
+NAME		= pipex
 
 VPATH		= $(SRC_DIR)
 SRC_DIR		= ./srcs
-SRC			= main.c
+SRC			= main.c \
+			  child.c \
+			  inputs.c \
+			  fd.c \
+			  utils.c \
+
 SRCS		= $(addprefix $(SRC_DIR)/, $(SRC))
 
 OBJ_DIR		= ./objs
 OBJS		= $(addprefix $(OBJ_DIR)/, $(SRC:%.c=%.o))
-#OBJ			= $(SRCS:.c=.o)
-#OBJS		= $(addprefix $(OBJ_DIR)/, $(SRC:%.c=%.o))
 DEPS		= $(OBJS:%.o=%.d)
-#INCS		= ./include
 
+INCLUDE_DIR	= ./includes
+
+
+# BONUS
+ifdef WITH_BONUS
+	NAME		= pipex_bonus
+	SRC_DIR		= ./bonus/srcs
+    SRC			= main.c
+    OBJ_DIR		= ./bonus/objs
+    INCLUDE_DIR	= ./bonus/includes
+endif
+
+
+# LIBS
+LIB_DIR		= ./lib
+LIBFT_DIR	= $(LIB_DIR)/libft
+LIBFT_NAME	= libft.a
+LIBFT		= $(LIBFT_DIR)/$(LIBFT_NAME)
+
+LIBGNL_DIR	= $(LIB_DIR)/libgnl
+LIBGNL_NAME	= libgnl.a
+LIBGNL		= $(LIBGNL_DIR)/$(LIBGNL_NAME)
+
+LIBFTPRINTF_DIR		= $(LIB_DIR)/libftprintf
+LIBFTPRINTF_NAME	= libftprintf.a
+LIBFTPRINTF			= $(LIBFTPRINTF_DIR)/$(LIBFTPRINTF_NAME)
+
+LIBS_DIR	= $(LIBFT_DIR) $(LIBGNL_DIR) $(LIBFTPRINTF_DIR)
+LIBS		= $(LIBFT) $(LIBGNL) $(LIBFTPRINTF)
+IFLAGS		= $(addprefix -I, $(INCLUDE_DIR))
+LFLAGS		= $(addprefix -L, $(LIBS_DIR))
+#LDFLAGS		= $(IFLAGS) $(LFLAGS) -lft -lgnl -lftprintf
+LDFLAGS		= $(IFLAGS) $(LFLAGS) $(LIBS)
+
+
+# RULES
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $@
+	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $$(dirname $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 
-all: $(NAME)
+all:
+	@make -C $(LIBFT_DIR)
+	@make -C $(LIBGNL_DIR)
+	@make -C $(LIBFTPRINTF_DIR)
+	@make $(NAME)
 
 clean:
 	rm -rf $(OBJ_DIR)
+	@make clean -C $(LIBFT_DIR)
+	@make clean -C $(LIBGNL_DIR)
+	@make clean -C $(LIBFTPRINTF_DIR)
 
 fclean:	clean
 	rm -f $(NAME)
+	@make fclean -C $(LIBFT_DIR)
+	@make fclean -C $(LIBGNL_DIR)
+	@make fclean -C $(LIBFTPRINTF_DIR)
 
 re: fclean all
 
+bonus:
+	@make all WITH_BONUS=1
+
 test:
-	make all WITH_TEST=1
+	@make re all WITH_TEST=1
 
 norm:
 	@norminette -v
-	norminette $(SRC_DIR) $(LIBFT_DIR)
+	norminette $(SRC_DIR)
 
-.PHONY:	all clean fclean re
+norm_lib:
+	@norminette -v
+	norminette $(LIB_DIR)
+
+.PHONY:	all clean fclean re test norm bonus
 
 -include		$(DEPS)
-

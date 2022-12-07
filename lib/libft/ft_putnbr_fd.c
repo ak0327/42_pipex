@@ -1,44 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printf_utils.c                                     :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/26 21:13:05 by takira            #+#    #+#             */
-/*   Updated: 2022/11/26 21:13:08 by takira           ###   ########.fr       */
+/*   Created: 2022/10/17 10:36:57 by takira            #+#    #+#             */
+/*   Updated: 2022/11/13 19:01:11 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_isdigit_pf(int c)
+static void	recursion_put_nbr(int num, int fd)
 {
-	return ('0' <= c && c <= '9');
+	if (num == 0)
+		return ;
+	recursion_put_nbr(num / 10, fd);
+	ft_putchar_fd(num % 10 + '0', fd);
 }
 
-char	*ft_strchr_printf(const char *s, int c)
+void	ft_putnbr_fd(int n, int fd)
 {
-	size_t	i;
+	unsigned int	num;
 
-	i = 0;
-	while (s[i] != '\0')
+	if (n >= 0)
+		num = n;
+	else
 	{
-		if (s[i] == (char)c)
-			return ((char *) &s[i]);
-		i++;
+		num = -n;
+		ft_putchar_fd('-', fd);
 	}
-	if ((char)c == '\0')
-		return ((char *) &s[i]);
-	return (NULL);
-}
-
-size_t	ft_strlen_printf(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
+	recursion_put_nbr(num / 10, fd);
+	ft_putchar_fd(num % 10 + '0', fd);
 }

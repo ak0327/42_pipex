@@ -1,44 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printf_utils.c                                     :+:      :+:    :+:   */
+/*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/26 21:13:05 by takira            #+#    #+#             */
-/*   Updated: 2022/11/26 21:13:08 by takira           ###   ########.fr       */
+/*   Created: 2022/10/17 10:35:34 by takira            #+#    #+#             */
+/*   Updated: 2022/10/17 10:35:36 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_isdigit_pf(int c)
+int	ft_lstsize(t_list *lst)
 {
-	return ('0' <= c && c <= '9');
-}
+	int	size;
 
-char	*ft_strchr_printf(const char *s, int c)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i] != '\0')
+	size = 0;
+	while (lst != NULL)
 	{
-		if (s[i] == (char)c)
-			return ((char *) &s[i]);
-		i++;
+		lst = lst->next;
+		size++;
 	}
-	if ((char)c == '\0')
-		return ((char *) &s[i]);
-	return (NULL);
-}
-
-size_t	ft_strlen_printf(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
+	return (size);
 }

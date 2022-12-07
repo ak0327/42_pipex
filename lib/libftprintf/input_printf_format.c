@@ -37,7 +37,7 @@ int	get_width(char *fmt, t_printf_info *info, va_list *p)
 {
 	int	input_arg;
 
-	if (fmt[info->fmt_idx] == '*' || ft_isdigit(fmt[info->fmt_idx]))
+	if (fmt[info->fmt_idx] == '*' || ft_isdigit_pf(fmt[info->fmt_idx]))
 	{
 		if (fmt[info->fmt_idx] == '*')
 		{
@@ -51,10 +51,10 @@ int	get_width(char *fmt, t_printf_info *info, va_list *p)
 				info->flag_zero_pad = false;
 			}
 			info->fmt_idx++;
-			if (info->flag_zero_pad && ft_isdigit(fmt[info->fmt_idx]))
+			if (info->flag_zero_pad && ft_isdigit_pf(fmt[info->fmt_idx]))
 				return (FAIL);
 		}
-		while (ft_isdigit(fmt[info->fmt_idx]))
+		while (ft_isdigit_pf(fmt[info->fmt_idx]))
 			info->width_siz = info->width_siz * 10 + fmt[info->fmt_idx++] - '0';
 		if (fmt[info->fmt_idx] == '*')
 			return (FAIL);
@@ -85,10 +85,10 @@ int	get_prec(char *fmt, t_printf_info *info, va_list *p)
 			info->perc_siz = va_arg(*p, int);
 			info->prec_dot_only = false;
 			info->fmt_idx += 1;
-			if (ft_isdigit(fmt[info->fmt_idx]))
+			if (ft_isdigit_pf(fmt[info->fmt_idx]))
 				return (FAIL);
 		}
-		while (ft_isdigit(fmt[info->fmt_idx]))
+		while (ft_isdigit_pf(fmt[info->fmt_idx]))
 			info->perc_siz = info->perc_siz * 10 + fmt[info->fmt_idx++] - '0';
 		update_prec_params(info);
 		if (fmt[info->fmt_idx] == '*')

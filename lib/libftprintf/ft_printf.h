@@ -45,11 +45,11 @@ typedef struct s_pritnf_info
 	char		*num_head_chr;
 }				t_printf_info;
 
-int		ft_isdigit(int c);
 int		ft_printf(const char *fmt, ...);
 int		get_width(char *fmt, t_printf_info *info, va_list *p);
 int		get_prec(char *fmt, t_printf_info *info, va_list *p);
 int		valid_info4fmt(char c, t_printf_info *info);
+int		ft_isdigit_pf(int c);
 
 ssize_t	ft_putchar_for_printf(char c, int fd);
 ssize_t	ft_putstr_for_printf(char *s, int fd);

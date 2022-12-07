@@ -1,44 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printf_utils.c                                     :+:      :+:    :+:   */
+/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/26 21:13:05 by takira            #+#    #+#             */
-/*   Updated: 2022/11/26 21:13:08 by takira           ###   ########.fr       */
+/*   Created: 2022/10/17 10:36:29 by takira            #+#    #+#             */
+/*   Updated: 2022/10/17 10:36:31 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_isdigit_pf(int c)
+void	ft_putchar_fd(char c, int fd)
 {
-	return ('0' <= c && c <= '9');
-}
-
-char	*ft_strchr_printf(const char *s, int c)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i] != '\0')
-	{
-		if (s[i] == (char)c)
-			return ((char *) &s[i]);
-		i++;
-	}
-	if ((char)c == '\0')
-		return ((char *) &s[i]);
-	return (NULL);
-}
-
-size_t	ft_strlen_printf(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
+	write(fd, &c, sizeof(char));
 }

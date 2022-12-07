@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen_ns.c                                     :+:      :+:    :+:   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/29 07:56:06 by takira            #+#    #+#             */
-/*   Updated: 2022/11/29 07:56:08 by takira           ###   ########.fr       */
+/*   Created: 2022/10/17 10:33:40 by takira            #+#    #+#             */
+/*   Updated: 2022/10/17 10:33:42 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlen_ns(const char *s)
+int	ft_isdigit(int c)
 {
-	size_t	len;
-
-	if (!s)
-		return (0);
-	len = 0;
-	while (s[len] != '\0')
-		len++;
-	return (len);
+	return ('0' <= c && c <= '9');
 }

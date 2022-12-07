@@ -20,9 +20,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
-# endif
+# define BUFFER_SIZE 42
 
 char	*get_next_line(int fd, bool is_include_nl);
 char	*strjoin_and_free_dst(char *dst, char *src);
