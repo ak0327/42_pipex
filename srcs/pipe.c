@@ -25,7 +25,9 @@ void	exec_pipe(t_pipe *p, int exit_no_if_fail)
 		perror_and_exit("pipe", exit_no_if_fail);
 	child_for_cmd1(p, exit_no_if_fail);
 	child_for_cmd2(p, exit_no_if_fail);
-	close_and_frees(p);
+	close(p->pipe_fd[READ]);
+	close(p->pipe_fd[WRITE]);
+	free_allocs(p);
 	wait_pids(p, exit_no_if_fail);
 }
 
@@ -38,6 +40,7 @@ static void	child_for_cmd1(t_pipe *p, int exit_no_if_fail)
 		perror_and_exit("fork", exit_no_if_fail);
 	if (p->pid1 == 0)
 	{
+		open_infile(p, exit_no_if_fail);
 		close(p->pipe_fd[READ]);
 		if (dup2(p->pipe_fd[WRITE], STDOUT_FILENO) < 0)
 			perror_and_exit("dup2", exit_no_if_fail);
@@ -49,13 +52,13 @@ static void	child_for_cmd1(t_pipe *p, int exit_no_if_fail)
 		{
 			p->path_cmd1 = create_cmd_path(p->env_paths[i++], p->input_cmd1[0]);
 			if (!p->path_cmd1)
-				errmsg_and_exit("[Error] Fail to malloc", exit_no_if_fail);
+				errmsg_str1_str2_exit("Fail to malloc", NULL, exit_no_if_fail);
 			execve(p->path_cmd1, p->input_cmd1, p->env);
-			free(p->path_cmd1);
-			p->path_cmd1 = NULL;
+			free_and_ret_null(&p->path_cmd1);
 		}
-		exit_and_errmsg_cmd_not_found(p->input_cmd1[0], 127, p);
+		errmsg_str1_str2_exit("command not found", p->input_cmd1[0], 127);
 	}
+	exit (EXIT_SUCCESS);
 }
 
 static void	child_for_cmd2(t_pipe *p, int exit_no_if_fail)
@@ -67,6 +70,7 @@ static void	child_for_cmd2(t_pipe *p, int exit_no_if_fail)
 		perror_and_exit("fork", exit_no_if_fail);
 	if (p->pid2 == 0)
 	{
+		open_outfile(p, exit_no_if_fail);
 		close(p->pipe_fd[WRITE]);
 		if (dup2(p->pipe_fd[READ], STDIN_FILENO) < 0)
 			perror_and_exit("dup2", exit_no_if_fail);
@@ -78,13 +82,13 @@ static void	child_for_cmd2(t_pipe *p, int exit_no_if_fail)
 		{
 			p->path_cmd2 = create_cmd_path(p->env_paths[i++], p->input_cmd2[0]);
 			if (!p->path_cmd2)
-				errmsg_and_exit("[Error] Fail to malloc", exit_no_if_fail);
+				errmsg_str1_str2_exit("Fail to malloc", NULL, exit_no_if_fail);
 			execve(p->path_cmd2, p->input_cmd2, p->env);
-			free(p->path_cmd1);
-			p->path_cmd1 = NULL;
+			free_and_ret_null(&p->path_cmd2);
 		}
-		exit_and_errmsg_cmd_not_found(p->input_cmd2[0], 127, p);
+		errmsg_str1_str2_exit("command not found", p->input_cmd2[0], 127);
 	}
+	exit (EXIT_SUCCESS);
 }
 
 static char	*create_cmd_path(char *env_path, const char *cmd)
@@ -108,13 +112,11 @@ static char	*create_cmd_path(char *env_path, const char *cmd)
 static void	wait_pids(t_pipe *p, int exit_no_if_fail)
 {
 	int	status1;
-	int status2;
+	int	status2;
 
 	status1 = 0;
 	status2 = 0;
 	if (waitpid(p->pid1, &status1, 0) < 0 || waitpid(p->pid2, &status2, 0) < 0)
-		perror_and_exit("", exit_no_if_fail);
-	debug_msg_str1_n_str2_nl("exit_status1 :", status1, "");
-	debug_msg_str1_n_str2_nl("exit_status2 :", status2, "");
-	debug_msg_str1_n_str2_nl("p->exit status :", p->exit_status, "");
+		perror_and_exit("waitpid", exit_no_if_fail);
+	p->exit_status = status2 % 255;
 }

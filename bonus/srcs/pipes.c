@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../includes/pipex.h"
+#include "pipex.h"
 
 void	recursion_pipe(int cmd_no, t_pipe *p, int exit_no_if_fail)
 {

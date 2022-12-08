@@ -27,7 +27,6 @@ static void	init_pipe_params(t_pipe *p, char ***argv)
 	p->is_cmd2_relative = false;
 	p->infile_name = NULL;
 	p->outfile_name = NULL;
-	p->num_of_cmds = 2;
 	p->exit_status = EXIT_SUCCESS;
 }
 
@@ -36,16 +35,15 @@ int	main(int argc, char **argv)
 	t_pipe	p;
 
 	if (argc != 5)
-		errmsg_and_exit(\
-		"[Invalid arguments] Hint:$> ./pipex infile \"cmd1\" \"cmd2\" outfile\n"\
-		"    it's same as operate:$> < infile_name cmd1 | cmd2 > outfile_name", \
-		EXIT_FAILURE);
+		errmsg_str1_str2_exit(\
+		"Invalid arguments. Input following cmds (1), it's operate same as (2)\n"\
+		" 1) $ ./pipex infile_name \"cmd1\" \"cmd2\" outfile_name\n"\
+		" 2) $ < infile_name cmd1 | cmd2 > outfile_name", \
+		NULL, EXIT_FAILURE);
 	init_pipe_params(&p, &argv);
 	get_inputs(&p, EXIT_FAILURE);
-	set_file_fds(&p, EXIT_FAILURE);
 	exec_pipe(&p, EXIT_FAILURE);
-	debug_msg_str1_n_str2_nl("main exit_status:", p.exit_status, "");
-	return (p.exit_status);
+	exit (p.exit_status);
 }
 
 #ifdef LESKS

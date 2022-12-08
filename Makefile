@@ -26,9 +26,8 @@ VPATH		= $(SRC_DIR)
 SRC_DIR		= ./srcs
 SRC			= main.c \
 			  pipe.c \
-			  pipes.c \
 			  inputs.c \
-			  fd.c \
+			  open_files.c \
 			  utils.c
 
 SRCS		= $(addprefix $(SRC_DIR)/, $(SRC))
