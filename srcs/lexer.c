@@ -18,8 +18,8 @@
 //		 " file2  "};
 // cmd1 = {"cmd1-1", "cmd1-2", NULL};
 // cmd2 = {"cmd2-1", "cmd2-2", "cmd2-3", NULL};
-// infile = file1;
-// outfile = file2;
+// infile_name = file1;
+// outfile_name = file2;
 
 int	main(int argc, char **argv)
 {

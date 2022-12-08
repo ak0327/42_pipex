@@ -13,30 +13,32 @@
 #include "./../includes/pipex.h"
 
 /* prototype declaration */
-static void	set_file_fds(t_pipe *p, int fail_exit_no);
-static void	dup_fds(t_pipe *p, int fail_exit_no);
+static void	open_files(t_pipe *p, int exit_no_if_fail);
+static void	dup_fds(t_pipe *p, int exit_no_if_fail);
 
 /* functions */
-void	set_fd(t_pipe *p, int fail_exit_no)
+void	set_file_fds(t_pipe *p, int exit_no_if_fail)
 {
-	set_file_fds(p, fail_exit_no);
-	dup_fds(p, fail_exit_no);
+	open_files(p, exit_no_if_fail);
+	dup_fds(p, exit_no_if_fail);
 }
 
-static void	set_file_fds(t_pipe *p, int fail_exit_no)
+static void	open_files(t_pipe *p, int exit_no_if_fail)
 {
-	p->file_fd[READ] = open(p->infile, O_RDONLY);
-	p->file_fd[WRITE] = open(p->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0666);
+	p->file_fd[READ] \
+	= open(p->infile_name, O_RDONLY);
+	p->file_fd[WRITE] \
+	= open(p->outfile_name, O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	if (p->file_fd[READ] < 0 || p->file_fd[WRITE] < 0)
-		errmsg_and_exit("[Error] Fail to open file", fail_exit_no);
+		errmsg_and_exit("[Error] Fail to open file", exit_no_if_fail);
 }
 
-static void	dup_fds(t_pipe *p, int fail_exit_no)
+static void	dup_fds(t_pipe *p, int exit_no_if_fail)
 {
 	if (dup2(p->file_fd[READ], STDIN_FILENO) < 0)
-		perror_and_exit("dup2", fail_exit_no);
+		perror_and_exit("dup2", exit_no_if_fail);
 	close(p->file_fd[READ]);
 	if (dup2(p->file_fd[WRITE], STDOUT_FILENO) < 0)
-		perror_and_exit("dup2", fail_exit_no);
+		perror_and_exit("dup2", exit_no_if_fail);
 	close(p->file_fd[WRITE]);
 }

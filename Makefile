@@ -26,9 +26,10 @@ VPATH		= $(SRC_DIR)
 SRC_DIR		= ./srcs
 SRC			= main.c \
 			  pipe.c \
+			  pipes.c \
 			  inputs.c \
 			  fd.c \
-			  utils.c \
+			  utils.c
 
 SRCS		= $(addprefix $(SRC_DIR)/, $(SRC))
 
@@ -67,23 +68,21 @@ LIBS_DIR	= $(LIBFT_DIR) $(LIBGNL_DIR) $(LIBFTPRINTF_DIR)
 LIBS		= $(LIBFT) $(LIBGNL) $(LIBFTPRINTF)
 IFLAGS		= $(addprefix -I, $(INCLUDE_DIR))
 LFLAGS		= $(addprefix -L, $(LIBS_DIR))
-#LDFLAGS		= $(IFLAGS) $(LFLAGS) -lft -lgnl -lftprintf
 LDFLAGS		= $(IFLAGS) $(LFLAGS) $(LIBS)
 
 
 # RULES
 $(NAME): $(OBJS)
+	@make -C $(LIBFT_DIR)
+	@make -C $(LIBGNL_DIR)
+	@make -C $(LIBFTPRINTF_DIR)
 	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $$(dirname $@)
 	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 
-all:
-	@make -C $(LIBFT_DIR)
-	@make -C $(LIBGNL_DIR)
-	@make -C $(LIBFTPRINTF_DIR)
-	@make $(NAME)
+all: $(NAME)
 
 clean:
 	rm -rf $(OBJ_DIR)
