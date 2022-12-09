@@ -22,6 +22,10 @@ static void	init_pipe_params(t_pipe *p, char ***argv)
 	p->infile_name = NULL;
 	p->outfile_name = NULL;
 	p->exit_status = EXIT_SUCCESS;
+}
+
+static void	init_cmd_params(t_pipe *p)
+{
 	p->cmd1 = (t_cmd *)malloc(sizeof(t_cmd));
 	p->cmd2 = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!p->cmd1 || !p->cmd2)
@@ -33,8 +37,10 @@ static void	init_pipe_params(t_pipe *p, char ***argv)
 	p->cmd2->cmds = NULL;
 	p->cmd1->path = NULL;
 	p->cmd2->path = NULL;
-	p->cmd1->is_relative = false;
-	p->cmd2->is_relative = false;
+	p->cmd1->is_rel = false;
+	p->cmd2->is_rel = false;
+	p->cmd1->is_abs = false;
+	p->cmd2->is_abs = false;
 	p->cmd1->fd_dup_for = STDOUT_FILENO;
 	p->cmd2->fd_dup_for = STDIN_FILENO;
 	p->cmd1->pid = -1;
@@ -53,6 +59,7 @@ int	main(int argc, char **argv)
 		" 2) $ < infile_name cmd1 | cmd2 > outfile_name", \
 		NULL, EXIT_FAILURE);
 	init_pipe_params(&p, &argv);
+	init_cmd_params(&p);
 	get_inputs(&p, EXIT_FAILURE);
 	exit_status = exec_pipe(&p, EXIT_FAILURE);
 	free_allocs(&p);

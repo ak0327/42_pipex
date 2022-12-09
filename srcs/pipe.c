@@ -44,10 +44,10 @@ static void	exec_cmd(t_pipe *p, t_cmd *cmd, int exit_num_if_fail)
 	if (cmd->pid == 0)
 	{
 		fd_dups(p, cmd->fd_dup_for, exit_num_if_fail);
-		if (cmd->is_relative)
+		if (cmd->is_rel || cmd->is_abs)
 			execve(cmd->cmds[0], cmd->cmds, p->env);
 		i = 0;
-		while (!cmd->is_relative && cmd->cmds[0] && p->env_paths[i])
+		while (!cmd->is_rel && !cmd->is_abs && cmd->cmds[0] && p->env_paths[i])
 		{
 			cmd->path = create_cmd_path(p->env_paths[i++], cmd->cmds[0]);
 			if (!cmd->path)
@@ -90,18 +90,17 @@ static void	fd_dups(t_pipe *p, int fd_dup_for, int exit_num_if_fail)
 static char	*create_cmd_path(char *env_path, const char *cmd)
 {
 	char			*cmd_path;
-	const char		*trimmed_cmd = ft_strtrim(cmd, "/");
 	const size_t	env_path_len = ft_strlen_ns(env_path);
-	const size_t	cmd_len = ft_strlen_ns(trimmed_cmd);
+	const size_t	cmd_len = ft_strlen_ns(cmd);
 
-	if (!trimmed_cmd)
+	if (!cmd)
 		return (NULL);
 	cmd_path = (char *)malloc(sizeof(char) * (env_path_len + cmd_len + 2));
 	if (!cmd_path)
 		return (NULL);
 	ft_strlcpy(cmd_path, env_path, env_path_len + 1);
 	ft_strlcat(cmd_path, "/", env_path_len + 2);
-	ft_strlcat(cmd_path, trimmed_cmd, env_path_len + cmd_len + 2);
+	ft_strlcat(cmd_path, cmd, env_path_len + cmd_len + 2);
 	return (cmd_path);
 }
 

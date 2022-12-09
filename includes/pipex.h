@@ -27,7 +27,8 @@
 # define SPACES			"\t\n\v\f\r "
 # define TRIM_CHARS		"\t\n\v\f\r '"
 
-# define PATH_CURRENT	"./"
+# define PATH_RELATIVE	"./"
+# define PATH_ABSOLUTE	"/"
 
 # define READ	0
 # define WRITE	1
@@ -38,7 +39,8 @@ struct s_cmd
 {
 	char	**cmds;
 	char	*path;
-	bool	is_relative;
+	bool	is_rel;
+	bool	is_abs;
 	pid_t	pid;
 	int		fd_dup_for;
 };

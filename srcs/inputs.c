@@ -15,7 +15,7 @@
 /* prototype declaration */
 static void	get_env_paths(t_pipe *p, int exit_num_if_fail);
 static void	get_cmds_from_argv(t_pipe *p, int exit_num_if_fail);
-static void	check_cmds_is_relative(t_pipe *p);
+static void	check_cmds_path(t_pipe *p);
 static void	get_file_names(t_pipe *p, int exit_num_if_fail);
 
 /* functions */
@@ -23,7 +23,7 @@ void	get_inputs(t_pipe *p, int exit_num_if_fail)
 {
 	get_env_paths(p, exit_num_if_fail);
 	get_cmds_from_argv(p, exit_num_if_fail);
-	check_cmds_is_relative(p);
+	check_cmds_path(p);
 	get_file_names(p, exit_num_if_fail);
 }
 
@@ -61,16 +61,25 @@ static void	get_cmds_from_argv(t_pipe *p, int exit_num_if_fail)
 		"Fail to get cmd1 or cmd2", NULL, exit_num_if_fail);
 }
 
-static void	check_cmds_is_relative(t_pipe *p)
+static void	check_cmds_path(t_pipe *p)
 {
-	const size_t	path_current_len = ft_strlen_ns(PATH_CURRENT);
+	const size_t	path_relative_len = ft_strlen_ns(PATH_RELATIVE);
+	const size_t	path_absolute_len = ft_strlen_ns(PATH_ABSOLUTE);
 
 	if (p->cmd1->cmds[0])
-		if (ft_strncmp(p->cmd1->cmds[0], PATH_CURRENT, path_current_len) == 0)
-			p->cmd1->is_relative = true;
+	{
+		if (ft_strncmp(p->cmd1->cmds[0], PATH_RELATIVE, path_relative_len) == 0)
+			p->cmd1->is_rel = true;
+		if (ft_strncmp(p->cmd1->cmds[0], PATH_ABSOLUTE, path_absolute_len) == 0)
+			p->cmd1->is_abs = true;
+	}
 	if (p->cmd2->cmds[0])
-		if (ft_strncmp(p->cmd2->cmds[0], PATH_CURRENT, path_current_len) == 0)
-			p->cmd2->is_relative = true;
+	{
+		if (ft_strncmp(p->cmd2->cmds[0], PATH_RELATIVE, path_relative_len) == 0)
+			p->cmd2->is_rel = true;
+		if (ft_strncmp(p->cmd2->cmds[0], PATH_ABSOLUTE, path_absolute_len) == 0)
+			p->cmd2->is_abs = true;
+	}
 }
 
 static void	get_file_names(t_pipe *p, int exit_num_if_fail)
