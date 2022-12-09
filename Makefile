@@ -28,7 +28,8 @@ SRC			= main.c \
 			  pipe.c \
 			  inputs.c \
 			  open_files.c \
-			  utils.c
+			  utils.c \
+			  errors.c \
 
 SRCS		= $(addprefix $(SRC_DIR)/, $(SRC))
 

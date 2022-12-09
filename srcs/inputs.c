@@ -39,7 +39,7 @@ static void	get_env_paths(t_pipe *p, int exit_no_if_fail)
 		i++;
 	if (!p->env[i])
 	{
-		p->env[i] = ft_strdup("");//TODO free ?
+		p->env[i] = ft_strdup("");
 		if (!p->env[i])
 			errmsg_str1_str2_exit(\
 			"Fail to get env path", NULL, exit_no_if_fail);
@@ -54,8 +54,8 @@ static void	get_env_paths(t_pipe *p, int exit_no_if_fail)
 
 static void	get_cmds_from_argv(t_pipe *p, int exit_no_if_fail)
 {
-	p->input_cmd1 = ft_split(p->av[2], ' ');
-	p->input_cmd2 = ft_split(p->av[3], ' ');
+	p->input_cmd1 = ft_split(p->argv[2], ' ');
+	p->input_cmd2 = ft_split(p->argv[3], ' ');
 	if (!p->input_cmd1 || !p->input_cmd2)
 		errmsg_str1_str2_exit(\
 		"Fail to get cmd1 or cmd2", NULL, exit_no_if_fail);
@@ -75,8 +75,8 @@ static void	check_cmds_is_relative(t_pipe *p)
 
 static void	get_file_names(t_pipe *p, int exit_no_if_fail)
 {
-	p->infile_name = ft_strtrim(p->av[1], SPACES);
-	p->outfile_name = ft_strtrim(p->av[4], SPACES);
+	p->infile_name = ft_strtrim(p->argv[1], SPACES);
+	p->outfile_name = ft_strtrim(p->argv[4], SPACES);
 	if (!ft_strlen_ns(p->infile_name) || !ft_strlen_ns(p->outfile_name))
 		errmsg_str1_str2_exit("Fail to get file name", NULL, exit_no_if_fail);
 }

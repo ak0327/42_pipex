@@ -16,7 +16,7 @@ static void	init_pipe_params(t_pipe *p, char ***argv)
 {
 	extern char	**environ;
 
-	p->av = *argv;
+	p->argv = *argv;
 	p->env = environ;
 	p->env_paths = NULL;
 	p->input_cmd1 = NULL;
@@ -27,12 +27,15 @@ static void	init_pipe_params(t_pipe *p, char ***argv)
 	p->is_cmd2_relative = false;
 	p->infile_name = NULL;
 	p->outfile_name = NULL;
+	p->pid1 = -1;
+	p->pid2 = -1;
 	p->exit_status = EXIT_SUCCESS;
 }
 
 int	main(int argc, char **argv)
 {
 	t_pipe	p;
+	int		exit_status;
 
 	if (argc != 5)
 		errmsg_str1_str2_exit(\
@@ -42,8 +45,8 @@ int	main(int argc, char **argv)
 		NULL, EXIT_FAILURE);
 	init_pipe_params(&p, &argv);
 	get_inputs(&p, EXIT_FAILURE);
-	exec_pipe(&p, EXIT_FAILURE);
-	exit (p.exit_status);
+	exit_status = exec_pipe(&p, EXIT_FAILURE);
+	return (exit_status);
 }
 
 #ifdef LESKS

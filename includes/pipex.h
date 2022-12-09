@@ -31,23 +31,36 @@
 
 # define PATH_CURRENT	"./"
 
+
+typedef struct s_cmd	t_cmd;
+struct s_cmd
+{
+	char	**input_cmd;
+	char	*path_cmd;
+	bool	is_cmd_relative;
+	pid_t	pid;
+};
+
 typedef struct s_pipe	t_pipe;
 struct s_pipe
 {
-	// av, env
-	char	**av;
+	// argv, env
+	char	**argv;
 	char	**env;
-	char	**env_paths; // TODO: free; split
+	char	**env_paths;
 	// cmd
-	char	**input_cmd1; // TODO: free; split
-	char	**input_cmd2; // TODO: free; split
-	char	*path_cmd1; // TODO: free; malloc
-	char	*path_cmd2; // TODO: free; malloc
+	t_cmd	*cmd1;
+	t_cmd	*cmd2;
+
+	char	**input_cmd1;
+	char	**input_cmd2;
+	char	*path_cmd1;
+	char	*path_cmd2;
 	bool	is_cmd1_relative;
 	bool	is_cmd2_relative;
 	// file
-	char	*infile_name; // TODO: free; trim
-	char	*outfile_name; // TODO: free; trim
+	char	*infile_name;
+	char	*outfile_name;
 	// pipe
 	pid_t	pid1;
 	pid_t	pid2;
@@ -56,22 +69,27 @@ struct s_pipe
 	int		exit_status;
 };
 
+
+
+
 /* inputs.c */
 void	get_inputs(t_pipe *p, int exit_no_if_fail);
 
 /* fd.c */
-void	open_infile(t_pipe *p, int exit_no_if_fail);
-void	open_outfile(t_pipe *p, int exit_no_if_fail);
+int		open_infile(t_pipe *p);
+int		open_outfile(t_pipe *p);
 
 /* pipe.c */
-void	exec_pipe(t_pipe *p, int exit_no_if_fail);
+int		exec_pipe(t_pipe *p, int exit_no_if_fail);
 
 /* utils.c */
-void	errmsg_str1_str2_exit(char *str1, char *str2, int exit_no);
-
-void	perror_and_exit(char *err_str, int exit_no);
 void	free_allocs(t_pipe *p);
 void	free_and_ret_null(char **alloc_str);
+
+/* errors.c */
+void	errmsg_str1_str2(char *str1, char *str2);
+void	errmsg_str1_str2_exit(char *str1, char *str2, int exit_no);
+void	perror_and_exit(char *err_str, int exit_no);
 
 /* for debug */
 //void	fprint_2d_arr(char **array, char *info_str, FILE *fp);
