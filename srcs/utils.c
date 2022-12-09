@@ -56,7 +56,11 @@ void	fprint_2d_arr(char **array, char *info_str, FILE *fp)
 		fprintf(fp, "#print_2d_arr");
 	fprintf(fp, " %s:[", info_str);
 	while (array[i])
-		fprintf(fp, "  '%s'\n", array[i++]);
+	{
+		if (i != 0)
+			printf(",");
+		fprintf(fp, "'%s'", array[i++]);
+	}
 	fprintf(fp, "]\n");
 }
 
@@ -67,9 +71,13 @@ void	print_2d_arr(char **array, char *info_str)
 	i = 0;
 	if (info_str)
 		printf("#print_2d_arr");
-	printf(" %s:[\n", info_str);
+	printf(" %s:[", info_str);
 	while (array[i])
-		printf("  '%s'\n", array[i++]);
+	{
+		if (i != 0)
+			printf(",");
+		printf("'%s'", array[i++]);
+	}
 	printf("]\n");
 }
 

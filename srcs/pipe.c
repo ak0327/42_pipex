@@ -29,7 +29,6 @@ int	exec_pipe(t_pipe *p, int exit_num_if_fail)
 		exec_cmd(p, p->cmd2, exit_num_if_fail);
 	if (close(p->pipe_fd[READ]) < 0 || close(p->pipe_fd[WRITE]) < 0)
 		perror_and_exit("close", exit_num_if_fail);
-	free_allocs(p);
 	if (p->cmd2->pid >= 0)
 		p->exit_status = wait_pids(p, exit_num_if_fail);
 	return (p->exit_status);

@@ -55,6 +55,7 @@ int	main(int argc, char **argv)
 	init_pipe_params(&p, &argv);
 	get_inputs(&p, EXIT_FAILURE);
 	exit_status = exec_pipe(&p, EXIT_FAILURE);
+	free_allocs(&p);
 	return (exit_status);
 }
 

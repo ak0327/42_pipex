@@ -54,8 +54,8 @@ static void	get_env_paths(t_pipe *p, int exit_num_if_fail)
 
 static void	get_cmds_from_argv(t_pipe *p, int exit_num_if_fail)
 {
-	p->cmd1->cmds = ft_split(p->argv[2], ' ');
-	p->cmd2->cmds = ft_split(p->argv[3], ' ');
+	p->cmd1->cmds = ft_split_pipex(p->argv[2], ' ', '\'');
+	p->cmd2->cmds = ft_split_pipex(p->argv[3], ' ', '\'');
 	if (!p->cmd1->cmds || !p->cmd2->cmds)
 		errmsg_str1_str2_exit(\
 		"Fail to get cmd1 or cmd2", NULL, exit_num_if_fail);

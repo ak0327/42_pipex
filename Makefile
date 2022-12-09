@@ -14,7 +14,7 @@ CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -MMD -MP
 
 ifdef WITH_TEST
-#	CFLAGS		+= -g -fsanitize=address -fsanitize=undefined -D LESKS
+#	CFLAGS		+= -g -fsanitize=address -fsanitize=undefined
 	CFLAGS		+= -D LESKS
 endif
 
@@ -30,6 +30,7 @@ SRC			= main.c \
 			  open_files.c \
 			  utils.c \
 			  errors.c \
+			  ft_split_set.c \
 
 SRCS		= $(addprefix $(SRC_DIR)/, $(SRC))
 
