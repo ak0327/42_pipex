@@ -34,12 +34,14 @@ void	free_and_ret_null(char **alloc_str)
 void	free_allocs(t_pipe *p)
 {
 	free_alloc_array(p->env_paths);
-	free_alloc_array(p->input_cmd1);
-	free_alloc_array(p->input_cmd2);
-	free_and_ret_null(&p->path_cmd1);
-	free_and_ret_null(&p->path_cmd2);
+	free_alloc_array(p->cmd1->cmds);
+	free_alloc_array(p->cmd2->cmds);
+	free_and_ret_null(&p->cmd1->path);
+	free_and_ret_null(&p->cmd2->path);
 	free(p->infile_name);
 	free(p->outfile_name);
+	free(p->cmd1);
+	free(p->cmd2);
 }
 
 /* for debug */

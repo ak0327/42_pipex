@@ -24,21 +24,21 @@
 # include "./../lib/libftprintf/ft_printf.h"
 # include "./../lib/libgnl/get_next_line.h"
 
-# define SPACES	"\t\n\v\f\r "
+# define SPACES			"\t\n\v\f\r "
+# define PATH_CURRENT	"./"
 
 # define READ	0
 # define WRITE	1
-
-# define PATH_CURRENT	"./"
-
+# define CMD_NOT_FOUND	127
 
 typedef struct s_cmd	t_cmd;
 struct s_cmd
 {
-	char	**input_cmd;
-	char	*path_cmd;
-	bool	is_cmd_relative;
+	char	**cmds;
+	char	*path;
+	bool	is_relative;
 	pid_t	pid;
+	int		fd_dup_for;
 };
 
 typedef struct s_pipe	t_pipe;
@@ -51,36 +51,24 @@ struct s_pipe
 	// cmd
 	t_cmd	*cmd1;
 	t_cmd	*cmd2;
-
-	char	**input_cmd1;
-	char	**input_cmd2;
-	char	*path_cmd1;
-	char	*path_cmd2;
-	bool	is_cmd1_relative;
-	bool	is_cmd2_relative;
 	// file
 	char	*infile_name;
 	char	*outfile_name;
 	// pipe
-	pid_t	pid1;
-	pid_t	pid2;
 	int		pipe_fd[2];
 	int		file_fd[2];
 	int		exit_status;
 };
 
-
-
-
 /* inputs.c */
-void	get_inputs(t_pipe *p, int exit_no_if_fail);
+void	get_inputs(t_pipe *p, int exit_num_if_fail);
 
 /* fd.c */
 int		open_infile(t_pipe *p);
 int		open_outfile(t_pipe *p);
 
 /* pipe.c */
-int		exec_pipe(t_pipe *p, int exit_no_if_fail);
+int		exec_pipe(t_pipe *p, int exit_num_if_fail);
 
 /* utils.c */
 void	free_allocs(t_pipe *p);

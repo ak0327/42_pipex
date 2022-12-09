@@ -13,84 +13,79 @@
 #include "./../includes/pipex.h"
 
 /* prototype declaration */
-static void	child_for_cmd1(t_pipe *p, int exit_no_if_fail);
-static void	child_for_cmd2(t_pipe *p, int exit_no_if_fail);
+static void	exec_cmd(t_pipe *p, t_cmd *cmd, int exit_num_if_fail);
+static void	fd_dups(t_pipe *p, int fd_dup_for, int exit_num_if_fail);
 static char	*create_cmd_path(char *env_path, const char *cmd);
-static int	wait_pids(t_pipe *p, int exit_no_if_fail);
+static int	wait_pids(t_pipe *p, int exit_num_if_fail);
 
 /* functions */
-int	exec_pipe(t_pipe *p, int exit_no_if_fail)
+int	exec_pipe(t_pipe *p, int exit_num_if_fail)
 {
 	if (pipe(p->pipe_fd) < 0)
-		perror_and_exit("pipe", exit_no_if_fail);
+		perror_and_exit("pipe", exit_num_if_fail);
 	if (open_infile(p) == PASS)
-		child_for_cmd1(p, exit_no_if_fail);
+		exec_cmd(p, p->cmd1, exit_num_if_fail);
 	if (open_outfile(p) == PASS)
-		child_for_cmd2(p, exit_no_if_fail);
+		exec_cmd(p, p->cmd2, exit_num_if_fail);
 	if (close(p->pipe_fd[READ]) < 0 || close(p->pipe_fd[WRITE]) < 0)
-		perror_and_exit("close", EXIT_FAILURE);
+		perror_and_exit("close", exit_num_if_fail);
 	free_allocs(p);
-	if (p->pid2 >= 0)
-		p->exit_status = wait_pids(p, exit_no_if_fail);
+	if (p->cmd2->pid >= 0)
+		p->exit_status = wait_pids(p, exit_num_if_fail);
 	return (p->exit_status);
 }
 
-static void	child_for_cmd1(t_pipe *p, int exit_no_if_fail)
+static void	exec_cmd(t_pipe *p, t_cmd *cmd, int exit_num_if_fail)
 {
 	size_t	i;
 
-	p->pid1 = fork();
-	if (p->pid1 < 0)
-		perror_and_exit("fork", exit_no_if_fail);
-	if (p->pid1 == 0)
+	cmd->pid = fork();
+	if (cmd->pid < 0)
+		perror_and_exit("fork", exit_num_if_fail);
+	if (cmd->pid == 0)
 	{
-		if (close(p->pipe_fd[READ]) < 0)
-			perror_and_exit("close", exit_no_if_fail);
-		if (dup2(p->pipe_fd[WRITE], STDOUT_FILENO) < 0)
-			perror_and_exit("dup2", exit_no_if_fail);
-		if (close(p->pipe_fd[WRITE]) < 0)
-			perror_and_exit("close", exit_no_if_fail);
-		if (p->is_cmd1_relative)
-			execve(p->input_cmd1[0], p->input_cmd1, p->env);
+		fd_dups(p, cmd->fd_dup_for, exit_num_if_fail);
+		if (cmd->is_relative)
+			execve(cmd->cmds[0], cmd->cmds, p->env);
 		i = 0;
-		while (!p->is_cmd1_relative && p->input_cmd1[0] && p->env_paths[i])
+		while (!cmd->is_relative && cmd->cmds[0] && p->env_paths[i])
 		{
-			p->path_cmd1 = create_cmd_path(p->env_paths[i++], p->input_cmd1[0]);
-			if (!p->path_cmd1)
-				errmsg_str1_str2_exit("Fail to malloc", NULL, exit_no_if_fail);
-			execve(p->path_cmd1, p->input_cmd1, p->env);
-			free_and_ret_null(&p->path_cmd1);
+			cmd->path = create_cmd_path(p->env_paths[i++], cmd->cmds[0]);
+			if (!cmd->path)
+				errmsg_str1_str2_exit("Fail to malloc", NULL, exit_num_if_fail);
+			execve(cmd->path, cmd->cmds, p->env);
+			free_and_ret_null(&cmd->path);
 		}
-		errmsg_str1_str2_exit("command not found", p->input_cmd1[0], 127);
+		errmsg_str1_str2_exit("command not found", cmd->cmds[0], CMD_NOT_FOUND);
 	}
 }
 
-static void	child_for_cmd2(t_pipe *p, int exit_no_if_fail)
+static void	fd_dups(t_pipe *p, int fd_dup_for, int exit_num_if_fail)
 {
-	size_t	i;
-
-	p->pid2 = fork();
-	if (p->pid2 < 0)
-		perror_and_exit("fork", exit_no_if_fail);
-	if (p->pid2 == 0)
+	if (fd_dup_for == STDOUT_FILENO)
 	{
-		close(p->pipe_fd[WRITE]);
-		if (dup2(p->pipe_fd[READ], STDIN_FILENO) < 0)
-			perror_and_exit("dup2", exit_no_if_fail);
-		close(p->pipe_fd[READ]);
-		if (p->is_cmd2_relative)
-			execve(p->input_cmd2[0], p->input_cmd2, p->env);
-		i = 0;
-		while (!p->is_cmd2_relative && p->input_cmd2[0] && p->env_paths[i])
-		{
-			p->path_cmd2 = create_cmd_path(p->env_paths[i++], p->input_cmd2[0]);
-			if (!p->path_cmd2)
-				errmsg_str1_str2_exit("Fail to malloc", NULL, exit_no_if_fail);
-			execve(p->path_cmd2, p->input_cmd2, p->env);
-			free_and_ret_null(&p->path_cmd2);
-		}
-		errmsg_str1_str2_exit("command not found", p->input_cmd2[0], 127);
+		if (close(p->pipe_fd[READ]) < 0)
+			perror_and_exit("close", exit_num_if_fail);
+		if (dup2(p->pipe_fd[WRITE], STDOUT_FILENO) < 0)
+			perror_and_exit("dup2", exit_num_if_fail);
+		if (close(p->pipe_fd[WRITE]) < 0)
+			perror_and_exit("close", exit_num_if_fail);
+		if (dup2(p->file_fd[READ], STDIN_FILENO) < 0)
+			perror_and_exit("dup2", exit_num_if_fail);
+		if (close(p->file_fd[READ]) < 0)
+			perror_and_exit("close", exit_num_if_fail);
+		return ;
 	}
+	if (close(p->pipe_fd[WRITE]) < 0)
+		perror_and_exit("close", exit_num_if_fail);
+	if (dup2(p->pipe_fd[READ], STDIN_FILENO) < 0)
+		perror_and_exit("dup2", exit_num_if_fail);
+	if (close(p->pipe_fd[READ]) < 0)
+		perror_and_exit("close", exit_num_if_fail);
+	if (dup2(p->file_fd[WRITE], STDOUT_FILENO) < 0)
+		perror_and_exit("dup2", exit_num_if_fail);
+	if (close(p->file_fd[WRITE]) < 0)
+		perror_and_exit("close", exit_num_if_fail);
 }
 
 static char	*create_cmd_path(char *env_path, const char *cmd)
@@ -111,16 +106,16 @@ static char	*create_cmd_path(char *env_path, const char *cmd)
 	return (cmd_path);
 }
 
-static int	wait_pids(t_pipe *p, int exit_no_if_fail)
+static int	wait_pids(t_pipe *p, int exit_num_if_fail)
 {
 	int	status1;
 	int	status2;
 
 	status1 = 0;
 	status2 = 0;
-	if (p->pid1 >= 0 && waitpid(p->pid1, &status1, 0) < 0)
-		perror_and_exit("waitpid", exit_no_if_fail);
-	if (p->pid2 >= 0 && waitpid(p->pid2, &status2, 0) < 0)
-		perror_and_exit("waitpid", exit_no_if_fail);
+	if (p->cmd1->pid >= 0 && waitpid(p->cmd1->pid, &status1, 0) < 0)
+		perror_and_exit("waitpid", exit_num_if_fail);
+	if (p->cmd2->pid >= 0 && waitpid(p->cmd2->pid, &status2, 0) < 0)
+		perror_and_exit("waitpid", exit_num_if_fail);
 	return (WEXITSTATUS(status2));
 }

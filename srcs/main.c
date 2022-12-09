@@ -19,17 +19,26 @@ static void	init_pipe_params(t_pipe *p, char ***argv)
 	p->argv = *argv;
 	p->env = environ;
 	p->env_paths = NULL;
-	p->input_cmd1 = NULL;
-	p->input_cmd2 = NULL;
-	p->path_cmd1 = NULL;
-	p->path_cmd2 = NULL;
-	p->is_cmd1_relative = false;
-	p->is_cmd2_relative = false;
 	p->infile_name = NULL;
 	p->outfile_name = NULL;
-	p->pid1 = -1;
-	p->pid2 = -1;
 	p->exit_status = EXIT_SUCCESS;
+	p->cmd1 = (t_cmd *)malloc(sizeof(t_cmd));
+	p->cmd2 = (t_cmd *)malloc(sizeof(t_cmd));
+	if (!p->cmd1 || !p->cmd2)
+	{
+		free_allocs(p);
+		errmsg_str1_str2_exit("Fail to malloc", "", EXIT_FAILURE);
+	}
+	p->cmd1->cmds = NULL;
+	p->cmd2->cmds = NULL;
+	p->cmd1->path = NULL;
+	p->cmd2->path = NULL;
+	p->cmd1->is_relative = false;
+	p->cmd2->is_relative = false;
+	p->cmd1->fd_dup_for = STDOUT_FILENO;
+	p->cmd2->fd_dup_for = STDIN_FILENO;
+	p->cmd1->pid = -1;
+	p->cmd2->pid = -1;
 }
 
 int	main(int argc, char **argv)
