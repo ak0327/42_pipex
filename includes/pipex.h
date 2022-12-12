@@ -74,8 +74,8 @@ int		open_outfile(t_pipe *p);
 /* pipe.c */
 int		exec_pipe(t_pipe *p, int exit_num_if_fail);
 
-/* ft_split_pipex.c */
-char	**ft_split_pipex(const char *str, char delim, char set);
+/* ft_split_set.c */
+char	**ft_split_set(const char *str, char delim, char set);
 
 /* utils.c */
 void	free_allocs(t_pipe *p);

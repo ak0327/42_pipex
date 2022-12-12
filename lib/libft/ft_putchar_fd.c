@@ -14,5 +14,12 @@
 
 void	ft_putchar_fd(char c, int fd)
 {
-	write(fd, &c, sizeof(char));
+	ssize_t	ret;
+
+	ret = write(fd, &c, sizeof(char));
+	if (ret < 0)
+	{
+		perror("write");
+		exit (EXIT_FAILURE);
+	}
 }
