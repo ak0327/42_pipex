@@ -42,11 +42,24 @@ INCLUDE_DIR	= ./includes
 
 
 # BONUS
+BONUS_NAME		= pipex_bonus
+B_SRC_DIR		= ./bonus/srcs
 ifdef WITH_BONUS
 	NAME		= pipex_bonus
 	SRC_DIR		= ./bonus/srcs
-    SRC			= main.c
-    OBJ_DIR		= ./bonus/objs
+    SRC			= main_bonus.c \
+				  pipe_bonus.c \
+				  inputs_bonus.c \
+				  open_files_bonus.c \
+				  utils_bonus.c \
+				  errors_bonus.c \
+				  ft_split_set_bonus.c \
+				  expansion_env_var_bonus.c \
+				  pipex/bonus/srcs/env_lsts_bonus.c \
+				  pipex/bonus/srcs/here_doc_bonus.c \
+				  pipex/bonus/srcs/free_alloc_bonus.c \
+
+
     INCLUDE_DIR	= ./bonus/includes
 endif
 
@@ -92,7 +105,7 @@ clean:
 	@make clean -C $(LIBFTPRINTF_DIR)
 
 fclean:	clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(BONUS_NAME)
 	@make fclean -C $(LIBFT_DIR)
 	@make fclean -C $(LIBGNL_DIR)
 	@make fclean -C $(LIBFTPRINTF_DIR)
@@ -100,14 +113,14 @@ fclean:	clean
 re: fclean all
 
 bonus:
-	@make all WITH_BONUS=1
+	@make WITH_BONUS=1
 
 test:
 	@make re all WITH_TEST=1
 
 norm:
 	@norminette -v
-	norminette $(SRC_DIR)
+	norminette $(SRC_DIR) $(B_SRC_DIR)
 
 norm_lib:
 	@norminette -v

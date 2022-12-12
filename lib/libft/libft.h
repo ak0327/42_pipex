@@ -16,6 +16,8 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdbool.h>
+# include <stdio.h>
+# include <errno.h>
 # include <limits.h>
 
 typedef struct s_list
