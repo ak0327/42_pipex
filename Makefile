@@ -42,10 +42,10 @@ INCLUDE_DIR	= ./includes
 
 
 # BONUS
-BONUS_NAME		= pipex_bonus
+#BONUS_NAME		= pipex_bonus
 B_SRC_DIR		= ./bonus/srcs
 ifdef WITH_BONUS
-	NAME		= pipex_bonus
+#	NAME		= pipex_bonus
 	SRC_DIR		= ./bonus/srcs
     SRC			= main_bonus.c \
 				  pipe_bonus.c \
@@ -54,11 +54,12 @@ ifdef WITH_BONUS
 				  utils_bonus.c \
 				  errors_bonus.c \
 				  ft_split_set_bonus.c \
-				  expansion_env_var_bonus.c \
-				  pipex/bonus/srcs/env_lsts_bonus.c \
-				  pipex/bonus/srcs/here_doc_bonus.c \
-				  pipex/bonus/srcs/free_alloc_bonus.c \
-
+				  envvar_expansion_bonus.c \
+				  env_lsts_bonus.c \
+				  here_doc_bonus.c \
+				  free_alloc_bonus.c \
+				  multi_pipe_bonus.c \
+				  init_pipe_params_bonus.c \
 
     INCLUDE_DIR	= ./bonus/includes
 endif
@@ -105,7 +106,8 @@ clean:
 	@make clean -C $(LIBFTPRINTF_DIR)
 
 fclean:	clean
-	rm -f $(NAME) $(BONUS_NAME)
+	rm -f $(NAME)
+#	rm -f $(NAME) $(BONUS_NAME)
 	@make fclean -C $(LIBFT_DIR)
 	@make fclean -C $(LIBGNL_DIR)
 	@make fclean -C $(LIBFTPRINTF_DIR)

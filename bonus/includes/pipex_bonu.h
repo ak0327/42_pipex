@@ -26,6 +26,7 @@
 
 # define SPACES			"\t\n\v\f\r "
 # define TRIM_CHARS		"\t\n\v\f\r '"
+# define HERE_DOC		"here_doc"
 
 # define PATH_RELATIVE	"./"
 # define PATH_ABSOLUTE	"/"
@@ -34,41 +35,44 @@
 # define WRITE	1
 # define CMD_NOT_FOUND	127
 
-typedef struct s_cmd	t_cmd;
-struct s_cmd
-{
-	char	**cmds;
-	char	*path;
-	bool	is_rel;
-	bool	is_abs;
-	pid_t	pid;
-	int		fd_dup_for;
-};
-
 typedef struct s_pipe	t_pipe;
 struct s_pipe
 {
 	// argv, env
-	char	**argv;
-	char	**env;
-	char	**env_paths;
+	char	**c_argv;
+	char	**c_env;
+	char	**c_env_paths;
 	// cmd
-	t_cmd	*cmd1;
-	t_cmd	*cmd2;
+	t_list	*t_cmd_list;
+	size_t	s_cmd_cnt;
+	size_t	s_first_cmd_idx_in_argv;
+	// here_doc
+	char	*c_limiter;
 	// file
-	char	*infile_name;
-	char	*outfile_name;
+	char	*c_infile_name;
+	char	*c_outfile_name;
 	// pipe
-	int		pipe_fd[2];
-	int		file_fd[2];
-	int		exit_status;
+	int		i_pipe_fd[2];
+	int		i_file_fd[2];
+	int		i_exit_status;
+};
+
+typedef struct s_cmd	t_cmd;//TODO:malloc
+struct s_cmd
+{
+	char	**c_cmds;//TODO:malloc
+	char	*c_path; //TODO:malloc when execute cmd
+	bool	b_is_rel;
+	bool	b_is_abs;
+	pid_t	t_pid;
+	int		i_fd_dup_for;
 };
 
 typedef struct s_env_elem	t_env_elem;
 struct s_env_elem
 {
-	char	*key;
-	char	*val;
+	char	*c_key;
+	char	*c_val;
 };
 
 typedef enum
@@ -78,7 +82,15 @@ typedef enum
 	FILE_APPEND
 }	open_purpose;
 
+/* init_pipe_params_bonus.c */
+void	init_pipe_params_b(t_pipe *p, char ***argv, size_t cmd_cnt, char *eof);
+
 /* inputs_bonus.c */
+void	get_env_paths_b(t_pipe *p, int exit_num_if_fail);
+void	get_input_cmds(t_pipe *p, int exit_num_if_fail);
+void	get_file_names_b(t_pipe *p, int exit_num_if_fail);
+
+
 void	get_inputs_b(t_pipe *p, int exit_num_if_fail);
 
 /* open_file_bonus.c */
@@ -86,6 +98,11 @@ int		open_infile_b(t_pipe *p);
 int		open_outfile_b(t_pipe *p);
 int		file_open_for(char *filename, open_purpose purpose);
 
+/* multi_pipe_bonus.c */
+int		multi_pipe_controller(int argc, char **argv);
+
+/* here_doc_bonus.c */
+int		here_doc(char **argv);
 
 /* pipe_bonus.c */
 int		exec_pipe_b(t_pipe *p, int exit_num_if_fail);
@@ -109,8 +126,9 @@ void	free_and_ret_null_b(char **alloc_str);
 void	free_env_elem(void *content);
 
 /* errors_bonus.c */
+void	exit_with_msg_and_free_allocs(char *s1, char *s2, int exit_no, t_pipe *p);
 void	errmsg_str1_str2_b(char *str1, char *str2);
-void	errmsg_str1_str2_exit_b(char *str1, char *str2, int exit_no);
+//void	exit_with_msg_and_free_allocs(char *str1, char *str2, int exit_no);
 void	perror_and_exit_b(char *err_str, int exit_no);
 
 /* for debug */

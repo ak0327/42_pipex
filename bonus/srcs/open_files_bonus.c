@@ -26,10 +26,10 @@ int	file_open_for(char *filename, open_purpose purpose)
 
 int	open_infile_b(t_pipe *p)
 {
-	p->file_fd[READ] = file_open_for(p->infile_name, FILE_READ);
-	if (p->file_fd[READ] < 0)
+	p->i_file_fd[READ] = file_open_for(p->c_infile_name, FILE_READ);
+	if (p->i_file_fd[READ] < 0)
 	{
-		errmsg_str1_str2_b("no such file or directory", p->infile_name);
+		errmsg_str1_str2_b("no such file or directory", p->c_infile_name);
 		return (FAIL);
 	}
 	return (PASS);
@@ -37,11 +37,11 @@ int	open_infile_b(t_pipe *p)
 
 int	open_outfile_b(t_pipe *p)
 {
-	p->file_fd[WRITE] = file_open_for(p->outfile_name, FILE_OVERWRITE);
-	if (p->file_fd[WRITE] < 0)
+	p->i_file_fd[WRITE] = file_open_for(p->c_outfile_name, FILE_OVERWRITE);
+	if (p->i_file_fd[WRITE] < 0)
 	{
-		errmsg_str1_str2_b("permission denied", p->outfile_name);
-		p->exit_status = EXIT_FAILURE;
+		errmsg_str1_str2_b("permission denied", p->c_outfile_name);
+		p->i_exit_status = EXIT_FAILURE;
 		return (FAIL);
 	}
 	return (PASS);

@@ -53,58 +53,71 @@ int	get_contents_to_lst(t_list *ptr, char *limiter, bool *is_eof)
 	return (PASS);
 }
 
-int	pass_contents_to_next_fd(int next_fd)
+//int	pass_contents_to_next_fd(int next_fd)
+//{
+//
+//
+//}
+
+// ./pipex  here_doc  LIMITER  cmd1  cmd2  outfile
+// -> argc == 6 && argv[1] == "here_doc"
+
+int here_doc(char **argv)
 {
+//	char	*line;
+//	int		file_fd[2];
+//	char	*outfile_name = "file1";
+//	t_list	*ptr;
+//	bool	is_eof;
 
+	t_pipe	p;
+	int		exit_status;
+	char	*limiter;
+	//init
+	printf("## here_doc ##\n");
 
-
-}
-
-int here_doc(int argc, char **argv)
-{
-	char		*line;
-	int			file_fd[2];
-	char		*outfile_name = "file1";
-	char		*limiter;
-	t_list		*ptr;
-	bool		is_eof;
-
-	if (argc != 3)
-	{
-		printf(\
-		"Invelid arg.\n"\
-		" input following: $> ./a.out here_doc LIMITER cmd1 cmd2 outfile\n"\
-		" operate as     : $> cmd1 << LIMITER | cmd2 >> outfile\n");
-		exit (1);
-	}
 	limiter = ft_strtrim(argv[2], SPACES);
 	if (!limiter)
-		errmsg_str1_str2_exit_b("Fail to get LIMITER", NULL, EXIT_FAILURE);
-	ptr = NULL;
-	if (get_contents_to_lst(ptr, limiter, &is_eof) == FAIL)
-	{
-		ft_lstclear(&ptr, free);
-		errmsg_str1_str2_exit_b("Fail to get here_doc", NULL, EXIT_FAILURE);
-	}
-	if (is_eof == true)
-		pass_contents_to_next_fd();
+		exit (1);
+	printf("limiter:[%s]\n", limiter);
+	init_pipe_params_b(&p, &argv, 2, limiter);
+
+	//get input
+	get_env_paths_b(&p, EXIT_FAILURE);
+	get_input_cmds(&p, EXIT_FAILURE);
+	get_file_names_b(&p, EXIT_FAILURE);
+
+	// do here_doc & pipe & update exit status
+	exit_status = EXIT_SUCCESS;
+
+	// free
 
 
-	if (is_last_line_eof(line, limiter) == PASS)
-	{
-		file_fd[WRITE] = file_open_for(outfile_name, FILE_APPEND);
-		if (file_fd[WRITE] < 0)
-			exit (2);
-
-		ft_lstiter_fd(ptr, file_fd[WRITE], ft_putstr_fd);
-
-		if (close(file_fd[WRITE]) < 0)
-			exit (3);
-	}
-
-	free(line);
-	ft_lstclear(&ptr, free);
-
-	system("leaks -q a.out");
-	return (0);
+//	limiter = ft_strtrim(argv[2], SPACES);
+//	if (!limiter)
+//		exit_with_msg_and_free_allocs("Fail to get LIMITER", NULL, EXIT_FAILURE);
+//	ptr = NULL;
+//	if (get_contents_to_lst(ptr, limiter, &is_eof) == FAIL)
+//	{
+//		ft_lstclear(&ptr, free);
+//		exit_with_msg_and_free_allocs("Fail to get here_doc", NULL,
+//									  EXIT_FAILURE);
+//	}
+//	if (is_last_line_eof(line, limiter) == PASS)
+//	{
+//		file_fd[WRITE] = file_open_for(outfile_name, FILE_APPEND);
+//		if (file_fd[WRITE] < 0)
+//			exit (2);
+//
+//		ft_lstiter_fd(ptr, file_fd[WRITE], ft_putstr_fd);
+//
+//		if (close(file_fd[WRITE]) < 0)
+//			exit (3);
+//	}
+//
+//	free(line);
+//	ft_lstclear(&ptr, free);
+//
+//	system("leaks -q a.out");
+	return (exit_status);
 }

@@ -75,5 +75,5 @@ void	print_path(void *content)
 	t_env_elem	*elem;
 
 	elem = content;
-	printf(" key:[%s]\n val:[%s]\n\n", elem->key, elem->val);
+	printf(" key:[%s]\n val:[%s]\n\n", elem->c_key, elem->c_val);
 }

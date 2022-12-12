@@ -53,8 +53,8 @@ char	*find_val_by_key(t_list *envs, char *search_key)
 	{
 		env_elem = envs->content;
 		if (key_len == ft_strlen_ns(search_key)
-			&& ft_strncmp_ns(env_elem->key, search_key, key_len) == 0)
-			return (env_elem->val);
+			&& ft_strncmp_ns(env_elem->c_key, search_key, key_len) == 0)
+			return (env_elem->c_val);
 		envs = envs->next;
 	}
 	return ("");
@@ -74,9 +74,9 @@ static t_env_elem	*get_env_key_val(char *env_i)
 	env_elem = (t_env_elem *)malloc(sizeof(t_env_elem));
 	if (!env_elem)
 		return (NULL);
-	env_elem->key = ft_substr(env_i, 0, i);
-	env_elem->val = ft_substr(env_i, i + 1, len - (i + 1));
-	if (!env_elem->key || !env_elem->val)
+	env_elem->c_key = ft_substr(env_i, 0, i);
+	env_elem->c_val = ft_substr(env_i, i + 1, len - (i + 1));
+	if (!env_elem->c_key || !env_elem->c_val)
 		return (NULL);
 	return (env_elem);
 }

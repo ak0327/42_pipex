@@ -99,9 +99,9 @@ static char	*search_env_key(char *line, size_t i, size_t len, t_list *envs)
 	while (envs != NULL)
 	{
 		env_elem = envs->content;
-		if (ft_strlen_ns(env_elem->key) == len
-			&& ft_strncmp_ns(env_elem->key, &line[i], len) == 0)
-			return (env_elem->key);
+		if (ft_strlen_ns(env_elem->c_key) == len
+			&& ft_strncmp_ns(env_elem->c_key, &line[i], len) == 0)
+			return (env_elem->c_key);
 		envs = envs->next;
 	}
 	return (NULL);
