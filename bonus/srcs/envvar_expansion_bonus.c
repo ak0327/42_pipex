@@ -19,9 +19,8 @@ static size_t	get_key_len(const char *line, size_t i);
 static int		is_var_candidate(const char *line, size_t i);
 
 /* functions */
-char	*expansion_env_variable(char *line)
+char	*expansion_env_variable(char *line, t_list *envs)
 {
-	t_list	*envs;
 	size_t	i;
 	size_t	key_wo_dollar_len;
 	char	*env_key;
@@ -29,7 +28,6 @@ char	*expansion_env_variable(char *line)
 
 	if (!line)
 		return (NULL);
-	envs = get_env_lst();
 	i = 0;
 	while (line[i])
 	{
@@ -44,7 +42,6 @@ char	*expansion_env_variable(char *line)
 		}
 		i++;
 	}
-	ft_lstclear(&envs, free_env_elem);
 	return (line);
 }
 
@@ -59,8 +56,8 @@ static char	*expansion_var(char *line, size_t wod_len, char *val, size_t i)
 	if (!new_line)
 		perror_and_exit_b("malloc", EXIT_FAILURE);
 	ft_strlcat(new_line, line, i + 1);
-	ft_strlcat(new_line, val, new_line_len);
-	ft_strlcat(new_line, &line[i + wod_len + 1], new_line_len);
+	ft_strlcat(new_line, val, new_line_len + 1);
+	ft_strlcat(new_line, &line[i + wod_len + 1], new_line_len + 1);
 	free(line);
 	return (new_line);
 }
@@ -70,6 +67,7 @@ static int	is_var_candidate(const char *line, size_t i)
 	if (line[i] == '$' && \
 	((i > 0 && line[i - 1] == '\\') \
 	|| line[i + 1] == '$' \
+	|| line[i + 1] == ' ' \
 	|| line[i + 1] == '\0' \
 	|| line[i + 1] == '\n'))
 		return (false);

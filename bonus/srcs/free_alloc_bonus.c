@@ -34,7 +34,7 @@ void	free_allocs_b(t_pipe *p)
 {
 	if (p)
 	{
-		free_alloc_array_b(p->c_env_paths);
+		free_alloc_array_b(p->c_paths);
 //		free_alloc_array_b(p->cmd1->cmds);
 //		free_alloc_array_b(p->cmd2->cmds);
 //		free_and_ret_null_b(&p->cmd1->path);
@@ -44,6 +44,7 @@ void	free_allocs_b(t_pipe *p)
 //		free(p->cmd1);
 //		free(p->cmd2);
 		// free(cmd_list);
+
 	}
 }
 

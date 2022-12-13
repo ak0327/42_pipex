@@ -48,18 +48,19 @@ ifdef WITH_BONUS
 #	NAME		= pipex_bonus
 	SRC_DIR		= ./bonus/srcs
     SRC			= main_bonus.c \
-				  pipe_bonus.c \
 				  inputs_bonus.c \
 				  open_files_bonus.c \
 				  utils_bonus.c \
 				  errors_bonus.c \
 				  ft_split_set_bonus.c \
-				  envvar_expansion_bonus.c \
 				  env_lsts_bonus.c \
-				  here_doc_bonus.c \
 				  free_alloc_bonus.c \
-				  multi_pipe_bonus.c \
+				  multi_pipe_controller_bonus.c \
 				  init_pipe_params_bonus.c \
+				  envvar_expansion_bonus.c \
+				  here_doc_bonus.c \
+				  exec_cmd_bonus.c \
+				  exec_pipe_bonus.c \
 
     INCLUDE_DIR	= ./bonus/includes
 endif

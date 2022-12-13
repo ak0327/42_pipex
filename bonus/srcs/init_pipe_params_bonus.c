@@ -12,50 +12,69 @@
 
 #include "./../includes/pipex_bonu.h"
 
-// struct, 型がわかりにくい　命名で工夫してみる
-void	init_pipe_params_b(t_pipe *p, char ***argv, size_t cmd_cnt, char *eof)
+/* prototype declaration */
+static int	check_here_doc_flg(char *argv1);
+static int	init_p_params_b(t_pipe *p, char ***argv, size_t cmd_cnt, bool is_hd);
+
+/* functions */
+void	init_controller(t_pipe *p, int argc, char ***argv, int exit_fail_no)
+{
+	bool	is_here_doc;
+	int		cmd_cnt;
+
+	is_here_doc = false;
+	cmd_cnt = argc - 3;
+	if (argc == 6 && check_here_doc_flg((*argv)[1]) == PASS)
+	{
+		cmd_cnt = 2;
+		is_here_doc = true;
+	}
+	if (init_p_params_b(p, argv, cmd_cnt, is_here_doc) == FAIL)
+		perror_and_exit_b("malloc", EXIT_FAILURE);
+	get_env_paths_b(p, exit_fail_no);
+	get_input_cmds(p, exit_fail_no);
+	get_file_names_b(p, exit_fail_no);
+}
+
+static int	init_p_params_b(t_pipe *p, char ***argv, size_t cmd_cnt, bool is_hd)
 {
 	extern char	**environ;
 
+	if (!p || !argv || !*argv)
+		return (FAIL);
 	p->c_argv = *argv;
-	p->c_env = environ;
-	p->c_env_paths = NULL;
+	p->c_environ = environ;
+	p->c_paths = NULL;
 	p->c_infile_name = NULL;
 	p->c_outfile_name = NULL;
-	p->c_limiter = eof;
+	p->c_limiter = NULL;
 	p->i_exit_status = EXIT_SUCCESS;
 	p->t_cmd_list = NULL;
+	p->t_here_doc_contents = NULL;
 	p->s_cmd_cnt = cmd_cnt;
-	if (eof)
+	p->s_first_cmd_idx_in_argv = 2;
+	p->child_process_cnt = 0;
+	if (is_hd)
+	{
 		p->s_first_cmd_idx_in_argv = 3;
-	else
-		p->s_first_cmd_idx_in_argv = 2;
+		p->c_limiter = ft_strtrim((*argv)[2], SPACES);
+		if (!p->c_limiter)
+			return (FAIL);
+	}
+	return (PASS);
 }
 
+static int check_here_doc_flg(char *argv1)
+{
+	char	*here_doc_flg;
+	int		result;
 
-// argv -> make cmd_lst
-//void	init_cmd_params_b(t_pipe *p, size_t cmd_cnt, size_t cmd1_idx_in_argv)
-//{
-//
-//
-//
-//	p->cmd1 = (t_cmd *)malloc(sizeof(t_cmd));
-//	p->cmd2 = (t_cmd *)malloc(sizeof(t_cmd));
-//	if (!p->cmd1 || !p->cmd2)
-//	{
-//		free_allocs_b(p);
-//		exit_with_msg_and_free_allocs("Fail to malloc", "", EXIT_FAILURE);
-//	}
-//	p->cmd1->cmds = NULL;
-//	p->cmd2->cmds = NULL;
-//	p->cmd1->path = NULL;
-//	p->cmd2->path = NULL;
-//	p->cmd1->is_rel = false;
-//	p->cmd2->is_rel = false;
-//	p->cmd1->is_abs = false;
-//	p->cmd2->is_abs = false;
-//	p->cmd1->fd_dup_for = STDOUT_FILENO;
-//	p->cmd2->fd_dup_for = STDIN_FILENO;
-//	p->cmd1->pid = -1;
-//	p->cmd2->pid = -1;
-//}
+	result = FAIL;
+	here_doc_flg = ft_strtrim(argv1, SPACES);
+	if (!here_doc_flg)
+		perror_and_exit_b("malloc", EXIT_FAILURE);
+	if (ft_strncmp_ns(here_doc_flg, HERE_DOC, ft_strlen_ns(HERE_DOC)) == 0)
+		result = PASS;
+	free(here_doc_flg);
+	return (result);
+}

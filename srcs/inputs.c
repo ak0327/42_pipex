@@ -68,16 +68,16 @@ static void	check_cmds_path(t_pipe *p)
 
 	if (p->cmd1->cmds[0])
 	{
-		if (ft_strncmp(p->cmd1->cmds[0], PATH_RELATIVE, path_relative_len) == 0)
+		if (ft_strncmp_ns(p->cmd1->cmds[0], PATH_RELATIVE, path_relative_len) == 0)
 			p->cmd1->is_rel = true;
-		if (ft_strncmp(p->cmd1->cmds[0], PATH_ABSOLUTE, path_absolute_len) == 0)
+		if (ft_strncmp_ns(p->cmd1->cmds[0], PATH_ABSOLUTE, path_absolute_len) == 0)
 			p->cmd1->is_abs = true;
 	}
 	if (p->cmd2->cmds[0])
 	{
-		if (ft_strncmp(p->cmd2->cmds[0], PATH_RELATIVE, path_relative_len) == 0)
+		if (ft_strncmp_ns(p->cmd2->cmds[0], PATH_RELATIVE, path_relative_len) == 0)
 			p->cmd2->is_rel = true;
-		if (ft_strncmp(p->cmd2->cmds[0], PATH_ABSOLUTE, path_absolute_len) == 0)
+		if (ft_strncmp_ns(p->cmd2->cmds[0], PATH_ABSOLUTE, path_absolute_len) == 0)
 			p->cmd2->is_abs = true;
 	}
 }

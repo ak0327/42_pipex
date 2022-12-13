@@ -15,26 +15,25 @@
 static t_env_elem	*get_env_key_val(char *env_i);
 
 /* functions */
-t_list	*get_env_lst(void)
+t_list	*get_env_lst(t_pipe *p, int exit_fail_no)
 {
-	extern char	**environ;
 	t_list		*envs;
 	t_list		*new_node;
 	t_env_elem	*env_elem;
 	size_t		i;
 
-	if (!environ)
-		perror_and_exit_b("environ", EXIT_FAILURE);
+	if (!p->c_environ)
+		perror_and_exit_b("environ", exit_fail_no);
 	envs = NULL;
 	i = 0;
-	while (environ[i])
+	while (p->c_environ[i])
 	{
-		env_elem = get_env_key_val(environ[i]);
+		env_elem = get_env_key_val(p->c_environ[i]);
 		new_node = ft_lstnew(env_elem);
 		if (!env_elem || !new_node)
 		{
 			ft_lstclear(&envs, free_env_elem);
-			perror_and_exit_b("malloc", EXIT_FAILURE);
+			perror_and_exit_b("malloc", exit_fail_no);
 		}
 		ft_lstadd_back(&envs, new_node);
 		i++;
