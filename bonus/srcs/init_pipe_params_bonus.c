@@ -59,7 +59,7 @@ static int	init_p_param_b(t_pipe *p, char ***argv, size_t cmd_cnt, bool is_hd)
 	if (is_hd)
 	{
 		p->s_first_cmd_idx_in_argv = CMD_IDX_HERE_DOC;
-		p->c_limiter_m = ft_strtrim((*argv)[LIMITER_IDX], SPACES);
+		p->c_limiter_m = (*argv)[LIMITER_IDX];
 		if (!p->c_limiter_m)
 			return (FAIL);
 	}

@@ -22,7 +22,6 @@ void	free_allocs_b(t_pipe *p)
 {
 	if (p)
 	{
-		free_1d_array_b(&p->c_limiter_m);
 		free_2d_array_b(&p->c_paths_m);
 		ft_lstclear(&p->t_cmd_list_m, free_cmds);
 		free(p->t_cmd_list_m);
