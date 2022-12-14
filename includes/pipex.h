@@ -48,17 +48,13 @@ struct s_cmd
 typedef struct s_pipe	t_pipe;
 struct s_pipe
 {
-	// argv, env
 	char	**argv;
 	char	**env;
 	char	**env_paths;
-	// cmd
 	t_cmd	*cmd1;
 	t_cmd	*cmd2;
-	// file
 	char	*infile_name;
 	char	*outfile_name;
-	// pipe
 	int		pipe_fd[2];
 	int		file_fd[2];
 	int		exit_status;
@@ -73,9 +69,6 @@ int		open_outfile(t_pipe *p);
 
 /* pipe.c */
 int		exec_pipe(t_pipe *p, int exit_num_if_fail);
-
-/* ft_split_set.c */
-char	**ft_split_set(const char *str, char delim, char set);
 
 /* utils.c */
 void	free_allocs(t_pipe *p);

@@ -10,52 +10,42 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../includes/pipex_bonu.h"
+#include "./../includes/pipex_bonus.h"
 
 /* prototype declaration */
-static int	is_last_line_eof(char *line, char *limiter);
-static int	get_here_doc_contents_to_lst(t_pipe *p);
+static int	check_is_eof(char *line, char *limiter);
 
 /* functions */
-bool	get_here_doc(t_pipe *p)
+int	get_heredoc_contents_to_lst(t_pipe *p)
 {
-	if (get_here_doc_contents_to_lst(p) == FAIL)
-	{
-		errmsg_str1_str2_b("Error occurred", "here_doc");
-		return (false);
-	}
-	return (true);
-}
+	char			*line_m;
+	t_list			*envs_m;
+	t_list			*new_node_m;
+	int				is_here_doc_success;
+	const size_t	limiter_len = ft_strlen_ns(p->c_limiter_m);
 
-static int	get_here_doc_contents_to_lst(t_pipe *p)
-{
-	char	*line;
-	t_list	*envs;
-	t_list	*new_node;
-	int		is_here_doc_success;
-
-	envs = get_env_lst(p, EXIT_FAILURE);
+	envs_m = get_env_lst(p, EXIT_FAILURE);
 	is_here_doc_success = FAIL;
 	while (true)
 	{
 		ft_putstr_fd("heredoc>", STDIN_FILENO);
-		line = get_next_line(STDIN_FILENO, true);
-		if (!line)
-			return (FAIL);
-		if (ft_strncmp_ns(line, p->c_limiter, ft_strlen_ns(p->c_limiter)) == 0)
+		line_m = get_next_line(STDIN_FILENO, true);
+		if (line_m && ft_strncmp_ns(line_m, p->c_limiter_m, limiter_len) == 0)
 			break ;
-		line = expansion_env_variable(line, envs);
-		new_node = ft_lstnew(line);
-		ft_lstadd_back(&p->t_here_doc_contents, new_node);
+		line_m = expand_env_var_controller(line_m, envs_m);
+		if (!line_m)
+			break ;
+		new_node_m = ft_lstnew(line_m);
+		ft_lstadd_back(&p->t_here_doc_contents, new_node_m);
 	}
-	if (is_last_line_eof(line, p->c_limiter) == true)
+	if (check_is_eof(line_m, p->c_limiter_m) == PASS)
 		is_here_doc_success = PASS;
-	free(line);
-	ft_lstclear(&envs, free_env_elem);
+	free(line_m);
+	ft_lstclear(&envs_m, free_env_elems);
 	return (is_here_doc_success);
 }
 
-static int	is_last_line_eof(char *line, char *limiter)
+static int	check_is_eof(char *line, char *limiter)
 {
 	const size_t	line_len = ft_strlen_ns(line);
 	const size_t	limiter_len = ft_strlen_ns(limiter);

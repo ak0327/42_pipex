@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../includes/pipex_bonu.h"
+#include "./../includes/pipex_bonus.h"
 
 static char	**free_array_b(char **array)
 {
@@ -102,7 +102,7 @@ static char	**get_split_strs_b(char **strs, const char *s, char d, char set)
 	return (strs);
 }
 
-char	**ft_split_set_b(const char *str, char delim, char set)
+char	**ft_split_set(const char *str, char delim, char set)
 {
 	char	**strs;
 	size_t	strs_size;

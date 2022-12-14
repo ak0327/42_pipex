@@ -10,50 +10,50 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../includes/pipex_bonu.h"
+#include "./../includes/pipex_bonus.h"
 
 /* prototype declaration */
 static t_cmd	*get_i_th_cmd_from_argv(t_pipe *p, size_t idx);
 static void		check_cmd_path_kind(t_cmd *cmd_node);
 
 /* functions */
-void	get_env_paths_b(t_pipe *p, int exit_num_if_fail)
+void	get_env_paths_b(t_pipe *p, int exit_fail_no)
 {
-	size_t	i;
-	size_t	j;
+	size_t			i;
+	size_t			j;
+	const size_t	len = ft_strlen_ns(PATH_FLG);
 
 	if (!p->c_environ)
-		exit_with_msg_and_frees(\
-		"Environment args not exist", NULL, exit_num_if_fail, p);
+		exit_with_errmsg_and_free_b(\
+		"Environment args not exist", NULL, exit_fail_no, p);
 	i = 0;
 	j = 0;
-	while (p->c_environ[i] && ft_strncmp_ns(p->c_environ[i], "PATH=", 5) != 0)
+	while (p->c_environ[i] && ft_strncmp(p->c_environ[i], PATH_FLG, len) != 0)
 		i++;
 	if (!p->c_environ[i])
 		p->c_environ[i] = "";
 	else
 		j = 5;
-	p->c_paths = ft_split(&p->c_environ[i][j], ':');
-	if (!p->c_paths)
-		exit_with_msg_and_frees(\
-		"Fail to get env path", NULL, exit_num_if_fail, p);
+	p->c_paths_m = ft_split(&p->c_environ[i][j], ':');
+	if (!p->c_paths_m)
+		exit_with_errmsg_and_free_b(\
+		"Fail to get env path", NULL, exit_fail_no, p);
 }
 
-void	get_input_cmds(t_pipe *p, int exit_num_if_fail)
+void	get_input_cmds(t_pipe *p, int exit_fail_no)
 {
 	size_t	i;
-	t_list	*new_node;
-	t_cmd	*new_cmd;
+	t_list	*new_node_m;
+	t_cmd	*new_cmd_m;
 
 	i = 0;
 	while (i < p->s_cmd_cnt)
 	{
-		new_cmd = get_i_th_cmd_from_argv(p, i + p->s_first_cmd_idx_in_argv);
-		new_node = ft_lstnew(new_cmd);
-		if (!new_cmd || !new_node) //TODO:free list in exitfunc?
-			exit_with_msg_and_frees(\
-			"Fail to get cmd", NULL, exit_num_if_fail, p);
-		ft_lstadd_back(&p->t_cmd_list, new_node);
+		new_cmd_m = get_i_th_cmd_from_argv(p, i + p->s_first_cmd_idx_in_argv);
+		new_node_m = ft_lstnew(new_cmd_m);
+		if (!new_cmd_m || !new_node_m)
+			exit_with_perror_free_b("malloc", exit_fail_no, p);
+		ft_lstadd_back(&p->t_cmd_list_m, new_node_m);
 		i++;
 	}
 }
@@ -64,12 +64,12 @@ static void	check_cmd_path_kind(t_cmd *cmd_node)
 	const size_t	path_abs_len = ft_strlen_ns(PATH_ABS);
 	int				cmp_res;
 
-	if (cmd_node->c_cmds[0])
+	if (cmd_node->c_cmds_m[0])
 	{
-		cmp_res = ft_strncmp_ns(cmd_node->c_cmds[0], PATH_REL, path_rel_len);
+		cmp_res = ft_strncmp_ns(cmd_node->c_cmds_m[0], PATH_REL, path_rel_len);
 		if (cmp_res == 0)
 			cmd_node->is_rel = true;
-		cmp_res = ft_strncmp_ns(cmd_node->c_cmds[0], PATH_ABS, path_abs_len);
+		cmp_res = ft_strncmp_ns(cmd_node->c_cmds_m[0], PATH_ABS, path_abs_len);
 		if (cmp_res == 0)
 			cmd_node->is_abs = true;
 	}
@@ -77,32 +77,32 @@ static void	check_cmd_path_kind(t_cmd *cmd_node)
 
 static t_cmd	*get_i_th_cmd_from_argv(t_pipe *p, size_t idx)
 {
-	t_cmd	*new_cmd;
+	t_cmd	*new_cmd_m;
 
-	new_cmd = (t_cmd *)malloc(sizeof(t_cmd));
-	if (!new_cmd)
+	new_cmd_m = (t_cmd *)malloc(sizeof(t_cmd));
+	if (!new_cmd_m)
 		return (NULL);
-	new_cmd->c_cmds = NULL;
-	new_cmd->c_path = NULL;
-	new_cmd->is_rel = false;
-	new_cmd->is_abs = false;
-	new_cmd->t_pid = -1;
-	new_cmd->c_cmds = ft_split_set_b(p->c_argv[idx], ' ', '\'');
-	if (!new_cmd->c_cmds)
+	new_cmd_m->c_cmds_m = NULL;
+	new_cmd_m->c_path_m = NULL;
+	new_cmd_m->is_rel = false;
+	new_cmd_m->is_abs = false;
+	new_cmd_m->t_pid = -1;
+	new_cmd_m->c_cmds_m = ft_split_set(p->c_argv[idx], ' ', '\'');
+	if (!new_cmd_m->c_cmds_m)
 		return (NULL);
-	check_cmd_path_kind(new_cmd);
-	return (new_cmd);
+	check_cmd_path_kind(new_cmd_m);
+	return (new_cmd_m);
 }
 
 void	get_file_names_b(t_pipe *p, int exit_num_if_fail)
 {
 	const size_t	outfile_idx = p->s_first_cmd_idx_in_argv + p->s_cmd_cnt;
 
-	if (!p->c_limiter)
-		p->c_infile_name = ft_strtrim(p->c_argv[1], SPACES);
-	p->c_outfile_name = ft_strtrim(p->c_argv[outfile_idx], SPACES);
-	if ((!p->c_limiter && !ft_strlen_ns(p->c_infile_name)) \
-	|| !ft_strlen_ns(p->c_outfile_name))
-		exit_with_msg_and_frees(\
+	if (!p->c_limiter_m)
+		p->c_infile_name_m = ft_strtrim(p->c_argv[1], SPACES);
+	p->c_outfile_name_m = ft_strtrim(p->c_argv[outfile_idx], SPACES);
+	if ((!p->c_limiter_m && !ft_strlen_ns(p->c_infile_name_m)) \
+	|| !ft_strlen_ns(p->c_outfile_name_m))
+		exit_with_errmsg_and_free_b(\
 		"Fail to get file name", NULL, exit_num_if_fail, p);
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../includes/pipex_bonu.h"
+#include "./../includes/pipex_bonus.h"
 
 /* functions */
 
@@ -27,7 +27,7 @@ void	ft_lstiter_fd(t_list *lst, int fd, void (*func)(char *, int))
 
 /* for debug */
 //FILE	*fp = fopen("print", "w");
-
+/*
 void	fprint_2d_arr_b(char **array, char *info_str, FILE *fp)
 {
 	size_t	i;
@@ -88,5 +88,6 @@ void	print_path(void *content)
 	t_env_elem	*elem;
 
 	elem = content;
-	printf(" key:[%s]\n val:[%s]\n\n", elem->c_key, elem->c_val);
+	printf(" key:[%s]\n val:[%s]\n\n", elem->c_key_m, elem->c_val_m);
 }
+*/

@@ -10,16 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../includes/pipex_bonu.h"
+#include "./../includes/pipex_bonus.h"
 
 /* prototype declaration */
-static char		*expansion_var(char *line, size_t wod_len, char *val, size_t i);
-static char		*search_env_key(char *line, size_t i, size_t len, t_list *envs);
+static char		*expand_var(char *line, size_t kwod_len, char *val, size_t i);
+static char		*search_key(char *line, size_t i, size_t len, t_list *envs);
 static size_t	get_key_len(const char *line, size_t i);
 static int		is_var_candidate(const char *line, size_t i);
 
 /* functions */
-char	*expansion_env_variable(char *line, t_list *envs)
+char	*expand_env_var_controller(char *line, t_list *envs)
 {
 	size_t	i;
 	size_t	key_wo_dollar_len;
@@ -34,9 +34,11 @@ char	*expansion_env_variable(char *line, t_list *envs)
 		if (line[i] == '$' && is_var_candidate(line, i) == true)
 		{
 			key_wo_dollar_len = get_key_len(line, i + 1);
-			env_key = search_env_key(line, i + 1, key_wo_dollar_len, envs);
-			env_val = find_val_by_key(envs, env_key);
-			line = expansion_var(line, key_wo_dollar_len, env_val, i);
+			env_key = search_key(line, i + 1, key_wo_dollar_len, envs);
+			env_val = search_val_in_envs(envs, env_key);
+			line = expand_var(line, key_wo_dollar_len, env_val, i);
+			if (!line)
+				return (NULL);
 			i += ft_strlen_ns(env_val);
 			continue ;
 		}
@@ -45,19 +47,22 @@ char	*expansion_env_variable(char *line, t_list *envs)
 	return (line);
 }
 
-static char	*expansion_var(char *line, size_t wod_len, char *val, size_t i)
+static char	*expand_var(char *line, size_t kwod_len, char *val, size_t i)
 {
 	const size_t	val_len = ft_strlen_ns(val);
 	char			*new_line;
 	size_t			new_line_len;
 
-	new_line_len = ft_strlen_ns(line) - (wod_len + 1) + val_len;
+	new_line_len = ft_strlen_ns(line) - (kwod_len + 1) + val_len;
 	new_line = (char *)ft_calloc(sizeof(char), new_line_len + 1);
 	if (!new_line)
-		perror_and_exit_b("malloc", EXIT_FAILURE);
+	{
+		free(line);
+		return (NULL);
+	}
 	ft_strlcat(new_line, line, i + 1);
 	ft_strlcat(new_line, val, new_line_len + 1);
-	ft_strlcat(new_line, &line[i + wod_len + 1], new_line_len + 1);
+	ft_strlcat(new_line, &line[i + kwod_len + 1], new_line_len + 1);
 	free(line);
 	return (new_line);
 }
@@ -88,7 +93,7 @@ static size_t	get_key_len(const char *line, size_t i)
 	return (len);
 }
 
-static char	*search_env_key(char *line, size_t i, size_t len, t_list *envs)
+static char	*search_key(char *line, size_t i, size_t len, t_list *envs)
 {
 	t_env_elem	*env_elem;
 
@@ -97,9 +102,9 @@ static char	*search_env_key(char *line, size_t i, size_t len, t_list *envs)
 	while (envs != NULL)
 	{
 		env_elem = envs->content;
-		if (ft_strlen_ns(env_elem->c_key) == len
-			&& ft_strncmp_ns(env_elem->c_key, &line[i], len) == 0)
-			return (env_elem->c_key);
+		if (ft_strlen_ns(env_elem->c_key_m) == len
+			&& ft_strncmp_ns(env_elem->c_key_m, &line[i], len) == 0)
+			return (env_elem->c_key_m);
 		envs = envs->next;
 	}
 	return (NULL);

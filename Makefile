@@ -30,7 +30,6 @@ SRC			= main.c \
 			  open_files.c \
 			  utils.c \
 			  errors.c \
-			  ft_split_set.c \
 
 SRCS		= $(addprefix $(SRC_DIR)/, $(SRC))
 
@@ -44,6 +43,7 @@ INCLUDE_DIR	= ./includes
 # BONUS
 #BONUS_NAME		= pipex_bonus
 B_SRC_DIR		= ./bonus/srcs
+B_INCLUDE_DIR	= ./bonus/includes
 ifdef WITH_BONUS
 #	NAME		= pipex_bonus
 	SRC_DIR		= ./bonus/srcs
@@ -52,7 +52,6 @@ ifdef WITH_BONUS
 				  open_files_bonus.c \
 				  utils_bonus.c \
 				  errors_bonus.c \
-				  ft_split_set_bonus.c \
 				  env_lsts_bonus.c \
 				  free_alloc_bonus.c \
 				  multi_pipe_controller_bonus.c \
@@ -123,7 +122,7 @@ test:
 
 norm:
 	@norminette -v
-	norminette $(SRC_DIR) $(B_SRC_DIR)
+	norminette $(SRC_DIR) $(B_SRC_DIR) $(INCLUDE_DIR) $(B_INCLUDE_DIR)
 
 norm_lib:
 	@norminette -v

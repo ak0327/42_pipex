@@ -10,15 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../includes/pipex_bonu.h"
+#include "./../includes/pipex_bonus.h"
 
 int	main(int argc, char **argv)
 {
 	int		exit_status;
 	t_pipe	p;
 
+	exit_status = EXIT_SUCCESS;
 	if (argc < 5)
-		errmsg_invalid_arg(EXIT_FAILURE);
+		exit_with_errmsg_invalid_arg(EXIT_FAILURE);
 	init_controller(&p, argc, &argv, EXIT_FAILURE);
 	exit_status = multi_pipe_controller(&p, EXIT_FAILURE);
 	free_allocs_b(&p);

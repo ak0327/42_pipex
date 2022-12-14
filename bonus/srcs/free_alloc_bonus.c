@@ -10,49 +10,62 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../includes/pipex_bonu.h"
+#include "./../includes/pipex_bonus.h"
 
-static void	free_alloc_array_b(char **alloc_array)
+/* prototype declaration */
+static void	free_cmds(void *content);
+static void	free_2d_array_b(char ***alloc_array);
+
+/* functions */
+void	free_allocs_b(t_pipe *p)
+{
+	if (p)
+	{
+		free_1d_array_b(&p->c_limiter_m);
+		free_2d_array_b(&p->c_paths_m);
+		ft_lstclear(&p->t_cmd_list_m, free_cmds);
+		free(p->t_cmd_list_m);
+		p->t_cmd_list_m = NULL;
+		free_1d_array_b(&p->c_infile_name_m);
+		free_1d_array_b(&p->c_outfile_name_m);
+	}
+}
+
+void	free_env_elems(void *content)
+{
+	t_env_elem	*elem;
+
+	elem = content;
+	free_1d_array_b(&elem->c_key_m);
+	free_1d_array_b(&elem->c_val_m);
+	free_1d_array_b(content);
+}
+
+static void	free_2d_array_b(char ***alloc_array)
 {
 	size_t	i;
 
 	i = 0;
-	if (alloc_array)
-		while (alloc_array[i])
-			free(alloc_array[i++]);
-	free(alloc_array);
+	if (alloc_array && *alloc_array)
+		while ((*alloc_array)[i])
+			free((*alloc_array)[i++]);
+	free(*alloc_array);
+	*alloc_array = NULL;
 }
 
-void	free_and_ret_null_b(char **alloc_str)
+void	free_1d_array_b(char **alloc_str)
 {
 	if (alloc_str)
 		free(*alloc_str);
 	*alloc_str = NULL;
 }
 
-void	free_allocs_b(t_pipe *p)
+static void	free_cmds(void *content)
 {
-	if (p)
-	{
-		free_alloc_array_b(p->c_paths);
-//		free_alloc_array_b(p->cmd1->cmds);
-//		free_alloc_array_b(p->cmd2->cmds);
-//		free_and_ret_null_b(&p->cmd1->path);
-//		free_and_ret_null_b(&p->cmd2->path);
-		free_and_ret_null_b(&p->c_infile_name);
-		free_and_ret_null_b(&p->c_outfile_name);
-//		free(p->cmd1);
-//		free(p->cmd2);
-		// free(cmd_list);
-	}
-}
+	t_cmd	*cmd;
 
-void	free_env_elem(void *content)
-{
-	t_env_elem	*elem;
-
-	elem = content;
-	free(elem->c_key);
-	free(elem->c_val);
-	free(content);
+	cmd = content;
+	free_2d_array_b(&cmd->c_cmds_m);
+	free_1d_array_b(&cmd->c_path_m);
+	free_1d_array_b(content);
 }

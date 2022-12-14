@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../includes/pipex.h"
+#include "libft.h"
 
 static char	**free_array(char **array)
 {
