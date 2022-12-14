@@ -15,15 +15,15 @@
 void	exit_with_errmsg_invalid_arg(int exit_fail_no)
 {
 	ft_putstr_fd(\
-	"Invalid args. Input following cmds 1-1) or 2-1),\n"\
+	"[Error] Invalid args. Input following cmds 1-1) or 2-1),\n"\
 	"        It's operate same as 1-2) or 2-2).\n"\
-	" ----------------------------------------------------------\n"\
-	" * 1-1)$> ./pipex infile_name \"cmd1\" \"cmd2\" outfile_name\n"\
-	"   1-2)$> < infile_name cmd1 | cmd2 > outfile_name\n"\
-	" ----------------------------------------------------------\n"\
+	" ----------------------------------------------------------------\n"\
+	" * 1-1)$> ./pipex infile_name \"cmd1\" \"cmd2\"..\"cmdn\" outfile_name\n"\
+	"   1-2)$> < infile_name cmd1 | cmd2 |..| cmdn > outfile_name\n"\
+	" ----------------------------------------------------------------\n"\
 	" * 2-1)$> ./pipex here_doc LIMITER \"cmd1\" \"cmd2\" outfile_name\n"\
 	"   2-2)$> cmd1 << LIMITER | cmd2 >> outfile_name\n"\
-	" ----------------------------------------------------------\n", \
+	" ----------------------------------------------------------------\n", \
 	STDERR_FILENO);
 	exit (exit_fail_no);
 }
