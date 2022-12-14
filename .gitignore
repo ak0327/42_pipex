@@ -1,6 +1,9 @@
 *
 !.gitignore
-!**/
+!srcs/
+!includes
+!lib/
+!bonus/
 !*.c
 !*.h
 !Makefile
