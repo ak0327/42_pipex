@@ -52,8 +52,6 @@ void	print_2d_arr_b(char **array, char *info_str)
 	i = 0;
 	if (info_str)
 		ft_putstr_fd("#print_2d_arr", STDERR_FILENO);
-//		printf("#print_2d_arr");
-//	printf(" %s:[", info_str);
 	ft_putstr_fd(" ", STDERR_FILENO);
 	ft_putstr_fd(info_str, STDERR_FILENO);
 	ft_putstr_fd("[", STDERR_FILENO);
@@ -61,14 +59,11 @@ void	print_2d_arr_b(char **array, char *info_str)
 	{
 		if (i != 0)
 			ft_putstr_fd(",", STDERR_FILENO);
-//			printf(",");
 		ft_putstr_fd("'", STDERR_FILENO);
 		ft_putstr_fd(array[i++], STDERR_FILENO);
 		ft_putstr_fd("'", STDERR_FILENO);
-//		printf("'%s'", array[i++]);
 	}
 	ft_putstr_fd("]\n", STDERR_FILENO);
-//	printf("]\n");
 }
 
 void	debug_msg_str1_n_str2_nl_b(char *str1, int n, char *str2)
@@ -87,7 +82,6 @@ void	debug_msg_str1_n_str2_b(char *str1, int n, char *str2)
 		ft_putnbr_fd(n, STDERR_FILENO);
 	ft_putstr_fd(str2, STDERR_FILENO);
 }
-
 
 void	print_path(void *content)
 {

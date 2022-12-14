@@ -44,7 +44,6 @@ void	free_allocs_b(t_pipe *p)
 //		free(p->cmd1);
 //		free(p->cmd2);
 		// free(cmd_list);
-
 	}
 }
 

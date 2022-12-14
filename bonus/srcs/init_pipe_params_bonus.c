@@ -14,7 +14,7 @@
 
 /* prototype declaration */
 static int	check_here_doc_flg(char *argv1);
-static int	init_p_params_b(t_pipe *p, char ***argv, size_t cmd_cnt, bool is_hd);
+static int	init_p_param_b(t_pipe *p, char ***argv, size_t cmd_cnt, bool is_hd);
 
 /* functions */
 void	init_controller(t_pipe *p, int argc, char ***argv, int exit_fail_no)
@@ -29,14 +29,16 @@ void	init_controller(t_pipe *p, int argc, char ***argv, int exit_fail_no)
 		cmd_cnt = 2;
 		is_here_doc = true;
 	}
-	if (init_p_params_b(p, argv, cmd_cnt, is_here_doc) == FAIL)
+	if (init_p_param_b(p, argv, cmd_cnt, is_here_doc) == FAIL)
 		perror_and_exit_b("malloc", EXIT_FAILURE);
 	get_env_paths_b(p, exit_fail_no);
 	get_input_cmds(p, exit_fail_no);
 	get_file_names_b(p, exit_fail_no);
+	if (is_here_doc)
+		p->is_here_doc_success = get_here_doc(p);
 }
 
-static int	init_p_params_b(t_pipe *p, char ***argv, size_t cmd_cnt, bool is_hd)
+static int	init_p_param_b(t_pipe *p, char ***argv, size_t cmd_cnt, bool is_hd)
 {
 	extern char	**environ;
 
@@ -52,28 +54,31 @@ static int	init_p_params_b(t_pipe *p, char ***argv, size_t cmd_cnt, bool is_hd)
 	p->t_cmd_list = NULL;
 	p->t_here_doc_contents = NULL;
 	p->s_cmd_cnt = cmd_cnt;
-	p->s_first_cmd_idx_in_argv = 2;
-	p->child_process_cnt = 0;
+	p->s_first_cmd_idx_in_argv = CMD_IDX_MULTI_PIPE;
+	p->is_here_doc_success = false;
 	if (is_hd)
 	{
-		p->s_first_cmd_idx_in_argv = 3;
-		p->c_limiter = ft_strtrim((*argv)[2], SPACES);
+		p->s_first_cmd_idx_in_argv = CMD_IDX_HERE_DOC;
+		p->c_limiter = ft_strtrim((*argv)[LIMITER_IDX], SPACES);
 		if (!p->c_limiter)
 			return (FAIL);
 	}
 	return (PASS);
 }
 
-static int check_here_doc_flg(char *argv1)
+static int	check_here_doc_flg(char *argv1)
 {
-	char	*here_doc_flg;
-	int		result;
+	char			*here_doc_flg;
+	int				result;
+	int				cmp_res;
+	const size_t	here_doc_len = ft_strlen_ns(HERE_DOC_FLG);
 
 	result = FAIL;
 	here_doc_flg = ft_strtrim(argv1, SPACES);
 	if (!here_doc_flg)
 		perror_and_exit_b("malloc", EXIT_FAILURE);
-	if (ft_strncmp_ns(here_doc_flg, HERE_DOC, ft_strlen_ns(HERE_DOC)) == 0)
+	cmp_res = ft_strncmp_ns(here_doc_flg, HERE_DOC_FLG, here_doc_len);
+	if (cmp_res == 0)
 		result = PASS;
 	free(here_doc_flg);
 	return (result);

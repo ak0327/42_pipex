@@ -63,21 +63,21 @@ static void	get_cmds_from_argv(t_pipe *p, int exit_num_if_fail)
 
 static void	check_cmds_path(t_pipe *p)
 {
-	const size_t	path_relative_len = ft_strlen_ns(PATH_RELATIVE);
-	const size_t	path_absolute_len = ft_strlen_ns(PATH_ABSOLUTE);
+	const size_t	path_relative_len = ft_strlen_ns(PATH_REL);
+	const size_t	path_absolute_len = ft_strlen_ns(PATH_ABS);
 
 	if (p->cmd1->cmds[0])
 	{
-		if (ft_strncmp_ns(p->cmd1->cmds[0], PATH_RELATIVE, path_relative_len) == 0)
+		if (ft_strncmp_ns(p->cmd1->cmds[0], PATH_REL, path_relative_len) == 0)
 			p->cmd1->is_rel = true;
-		if (ft_strncmp_ns(p->cmd1->cmds[0], PATH_ABSOLUTE, path_absolute_len) == 0)
+		if (ft_strncmp_ns(p->cmd1->cmds[0], PATH_ABS, path_absolute_len) == 0)
 			p->cmd1->is_abs = true;
 	}
 	if (p->cmd2->cmds[0])
 	{
-		if (ft_strncmp_ns(p->cmd2->cmds[0], PATH_RELATIVE, path_relative_len) == 0)
+		if (ft_strncmp_ns(p->cmd2->cmds[0], PATH_REL, path_relative_len) == 0)
 			p->cmd2->is_rel = true;
-		if (ft_strncmp_ns(p->cmd2->cmds[0], PATH_ABSOLUTE, path_absolute_len) == 0)
+		if (ft_strncmp_ns(p->cmd2->cmds[0], PATH_ABS, path_absolute_len) == 0)
 			p->cmd2->is_abs = true;
 	}
 }

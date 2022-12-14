@@ -17,7 +17,6 @@ static t_cmd	*get_i_th_cmd_from_argv(t_pipe *p, size_t idx);
 static void		check_cmd_path_kind(t_cmd *cmd_node);
 
 /* functions */
-
 void	get_env_paths_b(t_pipe *p, int exit_num_if_fail)
 {
 	size_t	i;
@@ -25,20 +24,19 @@ void	get_env_paths_b(t_pipe *p, int exit_num_if_fail)
 
 	if (!p->c_environ)
 		exit_with_msg_and_frees(\
-        "Environment args not exist", NULL, exit_num_if_fail, p);
+		"Environment args not exist", NULL, exit_num_if_fail, p);
 	i = 0;
 	j = 0;
 	while (p->c_environ[i] && ft_strncmp_ns(p->c_environ[i], "PATH=", 5) != 0)
 		i++;
 	if (!p->c_environ[i])
 		p->c_environ[i] = "";
-//		return ;
 	else
 		j = 5;
 	p->c_paths = ft_split(&p->c_environ[i][j], ':');
 	if (!p->c_paths)
 		exit_with_msg_and_frees(\
-        "Fail to get env path", NULL, exit_num_if_fail, p);
+		"Fail to get env path", NULL, exit_num_if_fail, p);
 }
 
 void	get_input_cmds(t_pipe *p, int exit_num_if_fail)
@@ -52,9 +50,9 @@ void	get_input_cmds(t_pipe *p, int exit_num_if_fail)
 	{
 		new_cmd = get_i_th_cmd_from_argv(p, i + p->s_first_cmd_idx_in_argv);
 		new_node = ft_lstnew(new_cmd);
-		if (!new_cmd || !new_node)//TODO:free list in exitfunc?
+		if (!new_cmd || !new_node) //TODO:free list in exitfunc?
 			exit_with_msg_and_frees(\
-        "Fail to get cmd", NULL, exit_num_if_fail, p);
+			"Fail to get cmd", NULL, exit_num_if_fail, p);
 		ft_lstadd_back(&p->t_cmd_list, new_node);
 		i++;
 	}
@@ -62,14 +60,17 @@ void	get_input_cmds(t_pipe *p, int exit_num_if_fail)
 
 static void	check_cmd_path_kind(t_cmd *cmd_node)
 {
-	const size_t	path_relative_len = ft_strlen_ns(PATH_RELATIVE);
-	const size_t	path_absolute_len = ft_strlen_ns(PATH_ABSOLUTE);
+	const size_t	path_rel_len = ft_strlen_ns(PATH_REL);
+	const size_t	path_abs_len = ft_strlen_ns(PATH_ABS);
+	int				cmp_res;
 
 	if (cmd_node->c_cmds[0])
 	{
-		if (ft_strncmp_ns(cmd_node->c_cmds[0], PATH_RELATIVE, path_relative_len) == 0)
+		cmp_res = ft_strncmp_ns(cmd_node->c_cmds[0], PATH_REL, path_rel_len);
+		if (cmp_res == 0)
 			cmd_node->is_rel = true;
-		if (ft_strncmp_ns(cmd_node->c_cmds[0], PATH_ABSOLUTE, path_absolute_len) == 0)
+		cmp_res = ft_strncmp_ns(cmd_node->c_cmds[0], PATH_ABS, path_abs_len);
+		if (cmp_res == 0)
 			cmd_node->is_abs = true;
 	}
 }
@@ -78,7 +79,6 @@ static t_cmd	*get_i_th_cmd_from_argv(t_pipe *p, size_t idx)
 {
 	t_cmd	*new_cmd;
 
-	// init
 	new_cmd = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!new_cmd)
 		return (NULL);
@@ -94,15 +94,15 @@ static t_cmd	*get_i_th_cmd_from_argv(t_pipe *p, size_t idx)
 	return (new_cmd);
 }
 
-void	get_file_names_b(t_pipe *p, int exit_num_if_fail) //TODO:free@Mandatory
+void	get_file_names_b(t_pipe *p, int exit_num_if_fail)
 {
 	const size_t	outfile_idx = p->s_first_cmd_idx_in_argv + p->s_cmd_cnt;
 
 	if (!p->c_limiter)
 		p->c_infile_name = ft_strtrim(p->c_argv[1], SPACES);
 	p->c_outfile_name = ft_strtrim(p->c_argv[outfile_idx], SPACES);
-	if ((!p->c_limiter && !ft_strlen_ns(p->c_infile_name))\
+	if ((!p->c_limiter && !ft_strlen_ns(p->c_infile_name)) \
 	|| !ft_strlen_ns(p->c_outfile_name))
 		exit_with_msg_and_frees(\
-    "Fail to get file name", NULL, exit_num_if_fail, p);
+		"Fail to get file name", NULL, exit_num_if_fail, p);
 }

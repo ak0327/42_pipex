@@ -26,14 +26,19 @@
 
 # define SPACES			"\t\n\v\f\r "
 # define TRIM_CHARS		"\t\n\v\f\r '"
-# define HERE_DOC		"here_doc"
+# define HERE_DOC_FLG	"here_doc"
 
-# define PATH_RELATIVE	"./"
-# define PATH_ABSOLUTE	"/"
+# define PATH_REL	"./"
+# define PATH_ABS	"/"
 
-# define READ	0
-# define WRITE	1
-# define CMD_NOT_FOUND	127
+# define READ		0
+# define WRITE		1
+# define BUF_SIZE	256
+
+# define CMD_NOT_FOUND		127
+# define CMD_IDX_MULTI_PIPE	2
+# define CMD_IDX_HERE_DOC	3
+# define LIMITER_IDX		2
 
 typedef struct s_pipe	t_pipe;
 struct s_pipe
@@ -49,14 +54,13 @@ struct s_pipe
 	// here_doc
 	char	*c_limiter;
 	t_list	*t_here_doc_contents;
+	bool	is_here_doc_success;
 	// file
 	char	*c_infile_name;
 	char	*c_outfile_name;
 	int		i_file_fd[2];
 	// pipe
 	int		i_exit_status;
-	int		*pid_lst;
-	size_t	child_process_cnt;
 };
 
 typedef struct s_cmd	t_cmd;//TODO:malloc
@@ -67,8 +71,6 @@ struct s_cmd
 	bool	is_rel;
 	bool	is_abs;
 	int		t_pid;
-	int		test;
-//	pid_t	t_pid;
 };
 
 typedef struct s_env_elem	t_env_elem;
@@ -96,7 +98,7 @@ void	get_file_names_b(t_pipe *p, int exit_num_if_fail);
 /* open_file_bonus.c */
 int		open_outfile_b(t_pipe *p);
 int		file_open_for(char *filename, open_purpose purpose);
-int		open_infile_or_here_doc(t_pipe *p);
+int		open_infile_b(t_pipe *p);
 
 /* multi_pipe_bonus.c */
 int		multi_pipe_controller(t_pipe *p, int exit_fail_no);
@@ -109,7 +111,7 @@ void	exec_i_th_pipe(t_pipe *p, int exit_fail_no, size_t pipe_no);
 void	exec_i_th_cmd(t_pipe *p, t_cmd *cmd, int exit_fail_no);
 
 /* here_doc_bonus.c */
-int		connect_here_doc_to_stdin(t_pipe *p);
+bool	get_here_doc(t_pipe *p);
 
 /* ft_split_set_bonus.c */
 char	**ft_split_set_b(const char *str, char delim, char set);

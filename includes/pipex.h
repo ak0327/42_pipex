@@ -27,8 +27,8 @@
 # define SPACES			"\t\n\v\f\r "
 # define TRIM_CHARS		"\t\n\v\f\r '"
 
-# define PATH_RELATIVE	"./"
-# define PATH_ABSOLUTE	"/"
+# define PATH_REL	"./"
+# define PATH_ABS	"/"
 
 # define READ	0
 # define WRITE	1
