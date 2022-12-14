@@ -14,7 +14,7 @@
 
 void	exit_with_errmsg_invalid_arg(int exit_fail_no)
 {
-	exit_with_errmsg_and_free_b(\
+	ft_putstr_fd(\
 	"Invalid args. Input following cmds 1-1) or 2-1),\n"\
 	"        It's operate same as 1-2) or 2-2).\n"\
 	" ----------------------------------------------------------\n"\
@@ -23,8 +23,9 @@ void	exit_with_errmsg_invalid_arg(int exit_fail_no)
 	" ----------------------------------------------------------\n"\
 	" * 2-1)$> ./pipex here_doc LIMITER \"cmd1\" \"cmd2\" outfile_name\n"\
 	"   2-2)$> cmd1 << LIMITER | cmd2 >> outfile_name\n"\
-	" ----------------------------------------------------------", \
-	NULL, exit_fail_no, NULL);
+	" ----------------------------------------------------------\n", \
+	STDERR_FILENO);
+	exit (exit_fail_no);
 }
 
 void	exit_with_perror_free_b(char *err_str, int exit_no, t_pipe *p)

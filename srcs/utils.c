@@ -13,18 +13,19 @@
 #include "./../includes/pipex.h"
 
 /* functions */
-static void	free_alloc_array(char **alloc_array)
+static void	free_2d_array(char ***alloc_array)
 {
 	size_t	i;
 
 	i = 0;
-	if (alloc_array)
-		while (alloc_array[i])
-			free(alloc_array[i++]);
-	free(alloc_array);
+	if (alloc_array && *alloc_array)
+		while ((*alloc_array)[i])
+			free((*alloc_array)[i++]);
+	free(*alloc_array);
+	*alloc_array = NULL;
 }
 
-void	free_and_ret_null(char **alloc_str)
+void	free_1d_array(char **alloc_str)
 {
 	if (alloc_str)
 		free(*alloc_str);
@@ -33,15 +34,20 @@ void	free_and_ret_null(char **alloc_str)
 
 void	free_allocs(t_pipe *p)
 {
-	free_alloc_array(p->env_paths);
-	free_alloc_array(p->cmd1->cmds);
-	free_alloc_array(p->cmd2->cmds);
-	free_and_ret_null(&p->cmd1->path);
-	free_and_ret_null(&p->cmd2->path);
-	free(p->infile_name);
-	free(p->outfile_name);
-	free(p->cmd1);
-	free(p->cmd2);
+	if (p)
+	{
+		free_2d_array(&p->env_paths);
+		free_2d_array(&p->cmd1->cmds);
+		free_2d_array(&p->cmd2->cmds);
+		free_1d_array(&p->cmd1->path);
+		free_1d_array(&p->cmd2->path);
+		free_1d_array(&p->infile_name);
+		free_1d_array(&p->outfile_name);
+		free(p->cmd1);
+		p->cmd1 = NULL;
+		free(p->cmd2);
+		p->cmd2 = NULL;
+	}
 }
 
 /* for debug */

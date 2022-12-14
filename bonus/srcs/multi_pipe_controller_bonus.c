@@ -40,7 +40,10 @@ static int	exec_pipe_parent(t_pipe *p, int exit_fail_no)
 	if (pid == 0)
 		exec_i_th_pipe(p, exit_fail_no, p->s_cmd_cnt - 1);
 	i = 0;
-	while (i++ < p->s_cmd_cnt + 1)
+	while (i < p->s_cmd_cnt + 1)
+	{
 		wait(&status);
+		i++;
+	}
 	return (WEXITSTATUS(status));
 }

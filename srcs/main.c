@@ -31,7 +31,7 @@ static void	init_cmd_params(t_pipe *p)
 	if (!p->cmd1 || !p->cmd2)
 	{
 		free_allocs(p);
-		errmsg_str1_str2_exit("Fail to malloc", "", EXIT_FAILURE);
+		exit_with_errmsg_free("Fail to malloc", "", EXIT_FAILURE, NULL);
 	}
 	p->cmd1->cmds = NULL;
 	p->cmd2->cmds = NULL;
@@ -53,11 +53,11 @@ int	main(int argc, char **argv)
 	int		exit_status;
 
 	if (argc != 5)
-		errmsg_str1_str2_exit(\
+		exit_with_errmsg_free(\
 		"Invalid arguments. Input following cmds (1), it's operate same as (2)\n"\
 		" 1) $ ./pipex infile_name \"cmd1\" \"cmd2\" outfile_name\n"\
 		" 2) $ < infile_name cmd1 | cmd2 > outfile_name", \
-		NULL, EXIT_FAILURE);
+		NULL, EXIT_FAILURE, NULL);
 	init_pipe_params(&p, &argv);
 	init_cmd_params(&p);
 	get_inputs(&p, EXIT_FAILURE);

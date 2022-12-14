@@ -25,10 +25,10 @@
 # include "./../lib/libgnl/get_next_line.h"
 
 # define SPACES			"\t\n\v\f\r "
-# define TRIM_CHARS		"\t\n\v\f\r '"
 
 # define PATH_REL	"./"
 # define PATH_ABS	"/"
+# define PATH_FLG	"PATH="
 
 # define READ	0
 # define WRITE	1
@@ -55,29 +55,29 @@ struct s_pipe
 	t_cmd	*cmd2;
 	char	*infile_name;
 	char	*outfile_name;
+	int		exit_status;
 	int		pipe_fd[2];
 	int		file_fd[2];
-	int		exit_status;
 };
 
 /* inputs.c */
-void	get_inputs(t_pipe *p, int exit_num_if_fail);
+void	get_inputs(t_pipe *p, int exit_fail_no);
 
 /* fd.c */
 int		open_infile(t_pipe *p);
 int		open_outfile(t_pipe *p);
 
 /* pipe.c */
-int		exec_pipe(t_pipe *p, int exit_num_if_fail);
+int		exec_pipe(t_pipe *p, int exit_fail_no);
 
 /* utils.c */
 void	free_allocs(t_pipe *p);
-void	free_and_ret_null(char **alloc_str);
+void	free_1d_array(char **alloc_str);
 
 /* errors.c */
 void	errmsg_str1_str2(char *str1, char *str2);
-void	errmsg_str1_str2_exit(char *str1, char *str2, int exit_no);
-void	perror_and_exit(char *err_str, int exit_no);
+void	exit_with_errmsg_free(char *str1, char *str2, int exit_no, t_pipe *p);
+void	exit_with_perror_free(char *err_str, int exit_no, t_pipe *p);
 
 /* for debug */
 //void	fprint_2d_arr(char **array, char *info_str, FILE *fp);

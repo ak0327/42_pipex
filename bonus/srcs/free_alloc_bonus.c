@@ -15,6 +15,7 @@
 /* prototype declaration */
 static void	free_cmds(void *content);
 static void	free_2d_array_b(char ***alloc_array);
+//void	free_lst(void *content);
 
 /* functions */
 void	free_allocs_b(t_pipe *p)
@@ -26,6 +27,7 @@ void	free_allocs_b(t_pipe *p)
 		ft_lstclear(&p->t_cmd_list_m, free_cmds);
 		free(p->t_cmd_list_m);
 		p->t_cmd_list_m = NULL;
+		ft_lstclear(&p->t_here_doc_contents, free);
 		free_1d_array_b(&p->c_infile_name_m);
 		free_1d_array_b(&p->c_outfile_name_m);
 	}
@@ -38,7 +40,7 @@ void	free_env_elems(void *content)
 	elem = content;
 	free_1d_array_b(&elem->c_key_m);
 	free_1d_array_b(&elem->c_val_m);
-	free_1d_array_b(content);
+	free(content);
 }
 
 static void	free_2d_array_b(char ***alloc_array)
@@ -67,5 +69,5 @@ static void	free_cmds(void *content)
 	cmd = content;
 	free_2d_array_b(&cmd->c_cmds_m);
 	free_1d_array_b(&cmd->c_path_m);
-	free_1d_array_b(content);
+	free(content);
 }

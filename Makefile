@@ -117,6 +117,9 @@ re: fclean all
 bonus:
 	@make WITH_BONUS=1
 
+bonus_test:
+	@make WITH_BONUS=1 WITH_TEST=1
+
 test:
 	@make re all WITH_TEST=1
 
