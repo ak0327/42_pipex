@@ -71,10 +71,9 @@ static int	is_var_candidate(const char *line, size_t i)
 {
 	if (line[i] == '$' && \
 	((i > 0 && line[i - 1] == '\\') \
-	|| line[i + 1] == '$' \
-	|| line[i + 1] == ' ' \
 	|| line[i + 1] == '\0' \
-	|| line[i + 1] == '\n'))
+	|| line[i + 1] == '\n' \
+	|| ft_ispunct(line[i + 1])))
 		return (false);
 	return (true);
 }
@@ -84,11 +83,7 @@ static size_t	get_key_len(const char *line, size_t i)
 	size_t	len;
 
 	len = 0;
-	while (line[i + len] \
-	&& line[i + len] != '\n' \
-	&& line[i + len] != ' ' \
-	&& line[i + len] != '"' \
-	&& line[i + len] != '$')
+	while (line[i + len] && ft_strchr(VAR_DELIM, line[i + len] == 0))
 		len++;
 	return (len);
 }

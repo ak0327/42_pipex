@@ -20,10 +20,10 @@ void	exec_i_th_cmd(t_pipe *p, t_cmd *cmd, int exit_fail_no)
 {
 	size_t	i;
 
-	if (cmd->is_rel || cmd->is_abs)
+	if (cmd->is_path)
 		execve(cmd->c_cmds_m[0], cmd->c_cmds_m, p->c_environ);
 	i = 0;
-	while (!cmd->is_rel && !cmd->is_abs && cmd->c_cmds_m[0] && p->c_paths_m[i])
+	while (!cmd->is_path && cmd->c_cmds_m[0] && p->c_paths_m[i])
 	{
 		cmd->c_path_m = create_cmd_path_b(p->c_paths_m[i++], cmd->c_cmds_m[0]);
 		if (!cmd->c_path_m)

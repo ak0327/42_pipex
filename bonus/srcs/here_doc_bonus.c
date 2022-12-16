@@ -27,7 +27,7 @@ int	get_heredoc_contents_to_lst(t_pipe *p)
 	is_eof = FAIL;
 	while (true)
 	{
-		ft_putstr_fd("heredoc>", STDIN_FILENO);
+		ft_putstr_fd("heredoc> ", STDIN_FILENO);
 		line_m = get_next_line(STDIN_FILENO, true);
 		if (line_m && check_is_limiter(line_m, p->c_limiter_m, &is_eof) == PASS)
 			break ;

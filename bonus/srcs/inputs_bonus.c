@@ -14,7 +14,7 @@
 
 /* prototype declaration */
 static t_cmd	*get_i_th_cmd_from_argv(t_pipe *p, size_t idx);
-static void		check_cmd_path_kind(t_cmd *cmd_node);
+static bool		get_is_path(const char *cmd_head);
 
 /* functions */
 void	get_env_paths_b(t_pipe *p, int exit_fail_no)
@@ -58,23 +58,6 @@ void	get_input_cmds(t_pipe *p, int exit_fail_no)
 	}
 }
 
-static void	check_cmd_path_kind(t_cmd *cmd_node)
-{
-	const size_t	path_rel_len = ft_strlen_ns(PATH_REL);
-	const size_t	path_abs_len = ft_strlen_ns(PATH_ABS);
-	int				cmp_res;
-
-	if (cmd_node->c_cmds_m[0])
-	{
-		cmp_res = ft_strncmp_ns(cmd_node->c_cmds_m[0], PATH_REL, path_rel_len);
-		if (cmp_res == 0)
-			cmd_node->is_rel = true;
-		cmp_res = ft_strncmp_ns(cmd_node->c_cmds_m[0], PATH_ABS, path_abs_len);
-		if (cmp_res == 0)
-			cmd_node->is_abs = true;
-	}
-}
-
 static t_cmd	*get_i_th_cmd_from_argv(t_pipe *p, size_t idx)
 {
 	t_cmd	*new_cmd_m;
@@ -90,11 +73,22 @@ static t_cmd	*get_i_th_cmd_from_argv(t_pipe *p, size_t idx)
 	new_cmd_m->c_cmds_m = ft_split_set(p->c_argv[idx], ' ', '\'');
 	if (!new_cmd_m->c_cmds_m)
 		return (NULL);
-	check_cmd_path_kind(new_cmd_m);
+	new_cmd_m->is_path = get_is_path(new_cmd_m->c_cmds_m[0]);
 	return (new_cmd_m);
 }
 
-void	get_file_names_b(t_pipe *p, int exit_num_if_fail)
+static bool	get_is_path(const char *cmd_head)
+{
+	if (!cmd_head)
+		return (false);
+	if (cmd_head[0] == '/')
+		return (true);
+	if (cmd_head[0] == '.' && cmd_head[1] == '/')
+		return (true);
+	return (false);
+}
+
+void	get_file_names_b(t_pipe *p, int exit_fail_no)
 {
 	const size_t	outfile_idx = p->s_first_cmd_idx_in_argv + p->s_cmd_cnt;
 
@@ -104,5 +98,5 @@ void	get_file_names_b(t_pipe *p, int exit_num_if_fail)
 	if ((!p->c_limiter_m && !ft_strlen_ns(p->c_infile_name_m)) \
 	|| !ft_strlen_ns(p->c_outfile_name_m))
 		exit_with_errmsg_and_free_b(\
-		"Fail to get file name", NULL, exit_num_if_fail, p);
+		"Fail to get file name", NULL, exit_fail_no, p);
 }

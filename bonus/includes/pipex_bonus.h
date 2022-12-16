@@ -30,6 +30,7 @@
 # define PATH_REL	"./"
 # define PATH_ABS	"/"
 # define PATH_FLG	"PATH="
+# define VAR_DELIM	"\n \"$"
 
 # define READ		0
 # define WRITE		1
@@ -63,6 +64,7 @@ typedef struct s_cmd
 	char	*c_path_m;
 	bool	is_rel;
 	bool	is_abs;
+	bool	is_path;
 	int		t_pid;
 }			t_cmd;
 
@@ -85,7 +87,7 @@ void	init_controller(t_pipe *p, int argc, char ***argv, int exit_fail_no);
 /* inputs_bonus.c */
 void	get_env_paths_b(t_pipe *p, int exit_fail_no);
 void	get_input_cmds(t_pipe *p, int exit_fail_no);
-void	get_file_names_b(t_pipe *p, int exit_num_if_fail);
+void	get_file_names_b(t_pipe *p, int exit_fail_no);
 
 /* open_file_bonus.c */
 int		open_outfile_b(t_pipe *p);
