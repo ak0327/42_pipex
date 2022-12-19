@@ -41,7 +41,8 @@ void	exec_i_th_pipe(t_pipe *p, int exit_fail_no, size_t pipe_no)
 		}
 	}
 	operate_parent_fds(pipe_fd, exit_fail_no, p);
-	connect_infile_or_heredoc_content(p, exit_fail_no);
+	if (pipe_no == 0)
+		connect_infile_or_heredoc_content(p, exit_fail_no);
 	exec_i_th_cmd(p, cmd_i, exit_fail_no);
 }
 
@@ -102,32 +103,3 @@ static void	connect_infile_or_heredoc_content(t_pipe *p, int exit_fail_no)
 	if (p->c_limiter_m)
 		ft_lstiter_fd(p->t_here_doc_contents, STDOUT_FILENO, ft_putstr_fd);
 }
-
-//static void	connect_infile_or_heredoc_content(t_pipe *p, int exit_fail_no)
-//{
-////	ssize_t	read_byte;
-////	char	buf[BUF_SIZE];
-//	if (!p->c_limiter_m)
-//	{
-//		if (open_infile_b(p) == FAIL)
-//			return ;
-////		if (close(p->i_file_fd[WRITE]) < 0)
-////			exit_with_perror_free_b("close", exit_fail_no, p);
-//		if (dup2(p->i_file_fd[READ], STDOUT_FILENO) < 0)
-//			exit_with_perror_free_b("dup2", exit_fail_no, p);
-//		if (close(p->i_file_fd[READ]) < 0)
-//			exit_with_perror_free_b("close", exit_fail_no, p);
-//
-////		while (true)
-////		{
-////			read_byte = read(p->i_file_fd[READ], &buf, BUF_SIZE);
-////			if (read_byte <= 0)
-////				break ;
-////			ft_putstr_fd(buf, STDOUT_FILENO);
-////		}
-////		if (read_byte < 0)
-////			exit_with_perror_free_b("read", exit_fail_no, p);
-//	}
-//	if (p->c_limiter_m)
-//		ft_lstiter_fd(p->t_here_doc_contents, STDOUT_FILENO, ft_putstr_fd);
-//}

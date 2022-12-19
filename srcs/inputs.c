@@ -43,7 +43,7 @@ static void	get_env_paths(t_pipe *p, int exit_fail_no)
 	if (!p->env[i])
 		p->env[i] = "";
 	else
-		j = 5;
+		j = len;
 	p->env_paths = ft_split(&p->env[i][j], ':');
 	if (!p->env_paths)
 		exit_with_errmsg_free(\

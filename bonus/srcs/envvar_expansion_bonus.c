@@ -67,6 +67,7 @@ static char	*expand_var(char *line, size_t kwod_len, char *val, size_t i)
 	return (new_line);
 }
 
+// ft_ispunct() use for pipex, not use in minishell for special characters.
 static int	is_var_candidate(const char *line, size_t i)
 {
 	if (line[i] == '$' && \
@@ -83,7 +84,7 @@ static size_t	get_key_len(const char *line, size_t i)
 	size_t	len;
 
 	len = 0;
-	while (line[i + len] && ft_strchr(VAR_DELIM, line[i + len] == 0))
+	while (line[i + len] && !ft_strchr(VAR_DELIM, line[i + len]))
 		len++;
 	return (len);
 }

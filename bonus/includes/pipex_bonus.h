@@ -34,7 +34,6 @@
 
 # define READ		0
 # define WRITE		1
-# define BUF_SIZE	256
 
 # define CMD_NOT_FOUND		127
 # define CMD_IDX_MULTI_PIPE	2
