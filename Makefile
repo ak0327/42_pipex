@@ -29,7 +29,7 @@ SRC			= main.c \
 			  inputs.c \
 			  open_files.c \
 			  utils.c \
-			  errors.c \
+			  errors.c
 
 SRCS		= $(addprefix $(SRC_DIR)/, $(SRC))
 
