@@ -31,7 +31,7 @@ static void	init_cmd_params(t_pipe *p)
 	if (!p->cmd1 || !p->cmd2)
 	{
 		free_allocs(p);
-		exit_with_errmsg_free("Fail to malloc", "", EXIT_FAILURE, NULL);
+		exit_with_errmsg_free("Fail to malloc.", "", EXIT_FAILURE, NULL);
 	}
 	p->cmd1->cmds = NULL;
 	p->cmd2->cmds = NULL;
