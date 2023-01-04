@@ -26,7 +26,7 @@ $ < infile cmd1 | cmd2 > outfile
 ```
 $ make bonus
 ```
-##Operate
+## Operate
 ### Multiple pileline
 ```
 $ ./pipex infile cmd1 cmd2 ... cmdn outfile
