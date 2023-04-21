@@ -24,6 +24,7 @@ $ < infile cmd1 | cmd2 > outfile
 ```
 <br>
 for example ...
+
 ```shell
 % cat -e infile 
 this is test file$
@@ -38,6 +39,7 @@ huga
 END$
 %
 ```
+
 <br><br>
 
 # Bonus
