@@ -73,9 +73,11 @@ for example ...
 % export ARG=42Tokyo
 % ./pipex here_doc EOF "cat" "cat -e" /dev/stdout
 heredoc> hello $ARG
-heredoc> this is heredoc
+heredoc> my project can expand environment arg in heredoc like shell
+heredoc> enjoy!
 heredoc> EOF
 hello 42Tokyo$
-this is heredoc$
+my project can expand environment arg in heredoc like shell$
+enjoy!$
 %
 ```
